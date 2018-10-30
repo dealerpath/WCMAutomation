@@ -42,6 +42,7 @@ import com.deere.PageFactory.Announcements_POF;
 public class BaseClass {
 	
 	//Global/Environment Variables & Constants
+	public static int testcaseNumber=1;
 	public static WebDriver wbDriver = null;
 	public static String strWorkingDir = System.getProperty("user.dir").toString();
 	public static String URL;
@@ -54,7 +55,7 @@ public class BaseClass {
 	public static String strSiteRegion = "R4_AUNZ";
 	public static String strDataPath = strWorkingDir + "\\TestData\\testdatasample.xlsx";
 	public static String strDataOutputPath = strWorkingDir + "\\ExportToExcel\\ExportToExcel";
-	public static String wcmDataOutputPath = strWorkingDir + "\\WCMContent\\WCMContent";
+	public static String wcmDataOutputPath;
 	//public static String wcmDataOutputPath = strWorkingDir + "\\WCMContent\\WCMContent";
 	public static String strWCMInput = strWorkingDir + "\\TestData\\WCMInput.xlsx";
 	public static String dateformat=  "dd-mm-yyyy"; // "yyyy-mm-dd";
