@@ -46,6 +46,8 @@ import com.deere.Helpers.WaitFactory;
 import com.steadystate.css.parser.selectors.SyntheticElementSelectorImpl;
 import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
 
+
+
 public class Alert_WCM_POF extends BaseClass{
 
 	static WebDriver alrtDriver;
@@ -57,7 +59,7 @@ public class Alert_WCM_POF extends BaseClass{
 	private static XSSFWorkbook wcmbook;
 	private static XSSFSheet wcmdataSheet;
 	
-	static int testcaseNumber=1;
+	//static int testcaseNumber=1;
 	
 	static String testCaseID="WCM_TC";
 	public static List<Map<String,String>> finalResultforExcel = new ArrayList<>();
@@ -224,11 +226,15 @@ public class Alert_WCM_POF extends BaseClass{
 	public static WebElement globalMappedCountires;
 	
 	
-	
+	/**
+     * @author      Yogender singh
+     * This method fetch the Alerts and Announcements for the Library mentioned in input sheet
+     * @return         void
+     * @ throws          Throwable 
+     */
+
 	public static void readWCMAlertsAnnouncementsContent() throws Throwable
-	{
-				
-			
+	{	
 		try
 		{
 			contentSection.click();
@@ -285,7 +291,14 @@ public class Alert_WCM_POF extends BaseClass{
 	
 	
 	
-	
+	/**
+     * @author      Yogender singh
+     * This method reads the Alerts and Announcements and writes them into WCM Output excel sheet
+     * and writes them into WCM output excel.
+     * @return         void
+     * @ throws          Throwable 
+     */
+
 	public static void moveInsideWCMContents(String wcmsection) throws Throwable
 	{
 		HashMap<String, String> wcmKeyvalue=new HashMap<String, String>();
@@ -310,13 +323,19 @@ public class Alert_WCM_POF extends BaseClass{
 						String SubDeptChildName=alrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a")).getText();
 						alertsList.add(chceckForTitle(SubDeptChildName));
 					}
+					if(alertsList.size()==totalCount)
+					{
+						break;
+						
+					}
 					
 				}
 				
 			 for(int i=0;i<numberOfContentsToFetch(alertsList);i++) 
 			 	{
 				 System.out.println("Fetching content for "+wcmsection+" :"+alertsList.get(i));
-				 WebElement alert1=alrtDriver.findElement(By.xpath("//a[contains(.,'"+alertsList.get(i)+"')]"));
+				//WebElement alert1=alrtDriver.findElement(By.xpath("//a[contains(.,'"+alertsList.get(i)+"')]"));
+				 WebElement alert1=alrtDriver.findElement(By.xpath("//a[.='"+alertsList.get(i)+"']"));
 				
 			 		alert1.click();
 				 	
@@ -348,7 +367,14 @@ public class Alert_WCM_POF extends BaseClass{
 		
 		
 	
-	
+	/**
+     * @author      Yogender singh
+     * This method is to check special characters in the title of the content
+     * and writes them into WCM output excel.
+     * @return         String(Title)
+     * @ throws          Throwable 
+     */
+
 	
 	private static String chceckForTitle(String text) throws Throwable{
 		
@@ -372,7 +398,12 @@ public class Alert_WCM_POF extends BaseClass{
 	}
 
 
-
+	/**
+     * @author      Yogender singh
+     * This method is to navigate to the library provided in the input sheet
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
 
 	public static void navigateToRegion(String library) throws Throwable
 	{
@@ -396,6 +427,15 @@ public class Alert_WCM_POF extends BaseClass{
 		
 	
 	}
+	
+	
+	/**
+     * @author      Yogender singh
+     * This method is to apply filter for Status to the WCM content
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
+	
 	public static void applyFilterForStatus() throws Throwable{
 		try {
 			
@@ -431,6 +471,12 @@ public class Alert_WCM_POF extends BaseClass{
 		
 	}
 	
+	/**
+     * @author      Yogender singh
+     * This method is to apply filter for Status and Date together to the WCM content
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
 	
 	
 	public static void applyFilterForStatusAndDate() throws Throwable{
@@ -505,7 +551,12 @@ public class Alert_WCM_POF extends BaseClass{
 		
 	}
 	
-
+	/**
+     * @author      Yogender singh
+     * This method is to apply filter for Date together to the WCM content
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
 
 public static void applyFilterForDate() throws Throwable{
 		
@@ -561,6 +612,13 @@ public static void applyFilterForDate() throws Throwable{
 	}
 	
 	
+/**
+ * @author      Yogender singh
+ * This method is to write the Headers and WCM content row wise into WCM output excel sheet
+ * and writes them into WCM output excel.
+ * @ throws          Throwable 
+ */
+
 	public static void writeWCMHeaderContentFinalToExcel() throws Throwable
 	{
 		
@@ -579,6 +637,12 @@ public static void applyFilterForDate() throws Throwable{
 		}
 	}
 
+	/**
+	 * @author      Yogender singh
+	 * This method is to create the WCM output excel sheet as per the Name given in the WCM input sheet 
+	 * and writes them into WCM output excel.
+	 * @ throws          Throwable 
+	 */
 	
 	public static void createWCMExcel() throws Throwable{
 		
@@ -657,7 +721,12 @@ public static void applyFilterForDate() throws Throwable{
 		
 	}
 	
-	
+	/**
+	 * @author      Yogender singh
+	 * This method is to read all the wcm content fields and store in Hashmap
+	 * and writes them into WCM output excel.
+	 * @ throws          Throwable 
+	 */
 	
 	public static void writeWCMToExcel(HashMap<String , String> valuesToWrite,String contentToForward ) throws Throwable{
 			
@@ -892,7 +961,7 @@ public static void applyFilterForDate() throws Throwable{
 		    		break;
 		    		}
 		    		
-		    		else if(ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
+		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded Rich Text") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
 		    		{
 		    			
 		    			indexPageContentType="Rich-Text";
@@ -943,8 +1012,7 @@ public static void applyFilterForDate() throws Throwable{
 		    		
 		    	}
 		    	
-		   HashMap<String, String> finalkeyValueWCM; 
-		    finalkeyValueWCM = new HashMap<String, String>();
+		   HashMap<String, String> finalkeyValueWCM = new HashMap<String, String>();
 		    
 		    String deptName=valuesToWrite.get("DepartmentName");
 		   
@@ -1025,7 +1093,12 @@ public static void applyFilterForDate() throws Throwable{
 	}
 	
 		
-	
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch all Product
+	 * and writes them into WCM output excel.
+	 * @ throws          Throwable 
+	 */
 	
 	
 	private static String fetchProductsList(String products) throws Throwable{
