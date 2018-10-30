@@ -48,7 +48,7 @@ public class WCM_Conetnt_POF extends BaseClass{
 	private static XSSFWorkbook wcmbook;
 	private static XSSFSheet wcmdataSheet;
 	
-	static int testcaseNumber=1;
+	//static int testcaseNumber=1;
 	
 	static String testCaseID="WCM_TC";
 	public static List<Map<String,String>> finalResultforExcel = new ArrayList<>();
@@ -322,8 +322,8 @@ public class WCM_Conetnt_POF extends BaseClass{
 			 for(int i=0;i<numberOfContentsToFetch(alertsList);i++) 
 			 	{
 				 System.out.println("Fetching content for "+wcmsection+" :"+alertsList.get(i));
-				 WebElement alert1=wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+alertsList.get(i)+"')]"));
-				
+				 //WebElement alert1=wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+alertsList.get(i)+"')]"));
+				 WebElement alert1=wcmalrtDriver.findElement(By.xpath("//a[.='"+alertsList.get(i)+"']"));
 			 		alert1.click();
 				 	
 					String wcmTCID=testCaseID+testcaseNumber;
@@ -704,10 +704,10 @@ public static void applyFilterForDate() throws Throwable{
 				if(checkForGlobalContent.getText().contains("GLOBAL_CONTENT"))
 				{
 					
-					String countries=wcmalrtDriver.findElement(By.xpath("//label[.='"+globalCountries.get(alertRegion)+"']/following::div[1]/span")).getText();
+					String countries=wcmalrtDriver.findElement(By.xpath("//label[.='"+globalCountries.get(alertRegion)+"']/following::span")).getText();
 					countryTitle=fetchCountriesList(countries);
 					
-					String products=wcmalrtDriver.findElement(By.xpath("//label[.='"+globalProductTypes.get(alertRegion)+"']/following::div[1]/span")).getText();;
+					String products=wcmalrtDriver.findElement(By.xpath("//label[.='"+globalProductTypes.get(alertRegion)+"']/following::span")).getText();;
 					prodTypeFinal=fetchProductsList(products);
 				}
 				
@@ -901,7 +901,7 @@ public static void applyFilterForDate() throws Throwable{
 		    		break;
 		    		}
 		    		
-		    		else if(ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
+		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded Rich Text") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
 		    		{
 		    			
 		    			indexPageContentType="Rich-Text";
