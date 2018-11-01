@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -32,15 +33,14 @@ public class Invoke_WCM extends BaseClass {
 	
 	WebDriver driver;
 	/**
-	 * This method is the first step of DealerPath suite which reads input from excel sheet, sets user
-	 * credentials, initiate drivers and page elements
+	 * This method is the first step of WCM suite which reads input from excel sheet, sets user
+	 * credentials, initiate drivers and page elements and creates WCM excel
 	 * 
 	 * @author Yogender.Singh
 	 * @createdAt 07-06-2018
 	 * @throws IOException
 	 * @throws Exception
-	 * @modifyBy yogender.singh
-	 * @modifyAt
+	 * @modifyBy yogender.singh 
 	 */
 	@BeforeClass
 	public void systemConfigSetup() throws IOException, Exception {
@@ -71,23 +71,19 @@ public class Invoke_WCM extends BaseClass {
 
 	/**
 	 * This method is used to invoke admin's login credentials then go to WCM
-	 * and fetch library specific content
+	 * and fetch library specific Alerts, Announcements and other WCM content
 	 * 
 	 * @author Yogender.Singh
 	 * @createdAt 05-08-2018
-	 * @throws IOException
-	 * @throws Exceptionss88593
-	 * @modifyBy
-	 * @modifyAt
 	 * @throws Throwable
 	 */
 	@Test(priority=0)
 	public static void invokeUserCredentials() throws Throwable {
-		
+		try
+		{
 		System.out.println("Verify Valid Login");
 		if(!URL.equals("https://dealerpathqualauth.tal.deere.com"))
 		{
-			
 			Login_Page_POF.setCredentialsNewVersion(strUserName, strPassword);
 		}	
 		else
@@ -151,7 +147,7 @@ public class Invoke_WCM extends BaseClass {
 			
 			Alert_WCM_POF.navigateToRegion(alertRegion);
 			
-			Alert_WCM_POF.readWCMAlertsAnnouncementsContent();
+			WCM_Conetnt_POF.readWCMAlertsAnnouncementsContent();
 			
 			BaseClass.wbDriver.findElement(By.xpath("//a[.='"+alertRegion+"']")).click();
 			
@@ -170,20 +166,35 @@ public class Invoke_WCM extends BaseClass {
 	        }
 			
 		}
+	}
 		
-		else 
+		catch(Exception e)
+		
 		{
+			LogFactory.info("Login for"+BaseClass.strUserName+"Failed");
 			System.out.println("Login for"+BaseClass.strUserName+"Failed");
 		}
 	}
 	
+	/**
+	 * This method is used to close the browser window
+	 * 
+	 * @author Yogender.Singh
+	 * @createdAt 05-08-2018
+	 * @throws Throwable
+	 */
 	
-	
-/*	@AfterClass
-	public void closeDriver() {
+	@AfterClass
+	public void closeDriver() throws Throwable{
 		
-		
+		try
+		{
 		BaseClass.wbDriver.quit();
 		System.out.println("all windows closed sucessfully");
-	}*/
+		}
+		catch(Exception e)
+		{
+		System.out.println("error while closing the browser window");
+		}
+	}
 }
