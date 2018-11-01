@@ -32,6 +32,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 import com.deere.Helpers.BaseClass;
+import com.deere.Helpers.LogFactory;
 import com.deere.Helpers.ValidationFactory;
 import com.deere.Helpers.WaitFactory;
 
@@ -306,8 +307,9 @@ public class WCM_Conetnt_POF extends BaseClass{
 					String subDeptImageTitle=wcmalrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]")).getAttribute("title");
 					if(!(subDeptImageTitle.contains("View children")))
 					{
-						String SubDeptChildName=wcmalrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a")).getText();
-						alertsList.add(chceckForTitle(SubDeptChildName));
+						String SubDeptChildName=wcmalrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
+						System.out.println(SubDeptChildName);
+						alertsList.add(SubDeptChildName);
 					}
 					
 					
@@ -323,6 +325,9 @@ public class WCM_Conetnt_POF extends BaseClass{
 			 	{
 				 System.out.println("Fetching content for "+wcmsection+" :"+alertsList.get(i));
 				 //WebElement alert1=wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+alertsList.get(i)+"')]"));
+				 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+alertsList.get(i)+"']")))
+		 		 {
+				 
 				 WebElement alert1=wcmalrtDriver.findElement(By.xpath("//a[.='"+alertsList.get(i)+"']"));
 			 		alert1.click();
 				 	
@@ -334,7 +339,11 @@ public class WCM_Conetnt_POF extends BaseClass{
 			  		writeWCMHeaderContentFinalToExcel();
 			  		testcaseNumber++;
 			    	closeContent.click();
-	 										
+		 		 }
+				 else
+				 {
+					 LogFactory.info("Unable to find the xpath for title::"+alertsList.get(i));
+				 }
 			 	}
 			}
 		
@@ -713,8 +722,6 @@ public static void applyFilterForDate() throws Throwable{
 				
 				else {
 					
-					
-
 					if(Region.equals("R1"))
 					{
 						System.out.println("Region is R1");
@@ -901,7 +908,7 @@ public static void applyFilterForDate() throws Throwable{
 		    		break;
 		    		}
 		    		
-		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded RichText") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
+		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded Rich Text") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
 		    		{
 		    			
 		    			indexPageContentType="Rich-Text";
@@ -918,7 +925,8 @@ public static void applyFilterForDate() throws Throwable{
 		    		{		    			
 		    		
 		    		String contentIs=checkForLinkRichTextDocument();
-		    	
+		    	System.out.println("Content is"+contentIs);
+		    		
 		    		String fetchFirstLast[]=contentIs.split("/");
 		    		
 		    		String contentIsFinal=fetchFirstLast[fetchFirstLast.length-1].trim();
@@ -1108,7 +1116,7 @@ public static void applyFilterForDate() throws Throwable{
 			
 			else if(ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
 			{
-				return "Rich-Text";
+				return "Rich-Text/None";
 				}
 			else if(ValidationFactory.isElementPresent(webContentElement) && !(webContentLinkText.getText().contains("None")))
 			{
@@ -1355,7 +1363,7 @@ public static void applyFilterForDate() throws Throwable{
 				String FecthDeptsimageTitle=wcmalrtDriver.findElement(By.xpath("//tr["+i+"]//td[2]//img[2]")).getAttribute("title");
 				if(FecthDeptsimageTitle.contains("View children") && !(FecthDeptsimageTitle.contains("View children of Announcements")))
 				{
-					String DeptChildrenName=wcmalrtDriver.findElement(By.xpath("//tr["+i+"]//td[2]//img[2]/following::td[1]//a")).getText();
+					String DeptChildrenName=wcmalrtDriver.findElement(By.xpath("//tr["+i+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 					subDepartments.add(DeptChildrenName);
 				}
 			}
@@ -1380,7 +1388,9 @@ public static void applyFilterForDate() throws Throwable{
 				
 				String subDeptsUnderDeptName=subDepartments.get(sd); //Optimization (Sub Department)
 		    	System.out.println("Fetching content for SubDepartment: "+subDeptsUnderDeptName);//Optimization
-				WebElement subDepartment=wcmalrtDriver.findElement(By.xpath("//a[.='"+subDeptsUnderDeptName+"' and starts-with(@title,'View children')]"));
+				
+		    	if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+subDeptsUnderDeptName+"' and starts-with(@title,'View children')]"))) {
+		    	WebElement subDepartment=wcmalrtDriver.findElement(By.xpath("//a[.='"+subDeptsUnderDeptName+"' and starts-with(@title,'View children')]"));
 			
 				subDepartment.click(); //Optimization or Business Management Clicked
 				
@@ -1413,9 +1423,9 @@ public static void applyFilterForDate() throws Throwable{
 						
 						if(!(subDeptImageTitle.contains("View children")))
 						{
-							String SubDeptNoChildName=wcmalrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a")).getText();
-							SubDeptLinkPortlets.add(chceckForTitle(SubDeptNoChildName));
-							System.out.println("Added link:: "+SubDeptNoChildName+" for SubDepartment::"+subDepartment);
+							String SubDeptNoChildName=wcmalrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
+							SubDeptLinkPortlets.add(SubDeptNoChildName);
+							System.out.println("Added link:: "+SubDeptNoChildName+" for SubDepartment::"+subDeptsUnderDeptName);
 						}
 						
 						if(SubDeptLinkPortlets.size()==totalCount)
@@ -1437,7 +1447,10 @@ public static void applyFilterForDate() throws Throwable{
 						 
 						String SubDeptLinkPortlet=SubDeptLinkPortlets.get(k);
 					     System.out.println("Fetching content for "+SubDeptLinkPortlet);
-						 WebElement subDeptlinkPortletElement=wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+SubDeptLinkPortlet+"') and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]"));
+						 
+					    if(ValidationFactory.isElementPresent(By.xpath("//a[contains(.,'"+SubDeptLinkPortlet+"') and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")))
+					    {
+					     WebElement subDeptlinkPortletElement=wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+SubDeptLinkPortlet+"') and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]"));
 						 
 						 subDeptlinkPortletElement.click();
 						 
@@ -1466,7 +1479,14 @@ public static void applyFilterForDate() throws Throwable{
 					    	   writeWCMHeaderContentFinalToExcel();
 					    	   testcaseNumber++;
 					    	   closeContent.click();
-						} 			
+						} 
+					    
+					    else
+						{
+							LogFactory.info("Unable to find the xpath for title::"+SubDeptLinkPortlet);
+						}
+					
+					}
 					
 					
 					}
@@ -1477,11 +1497,14 @@ public static void applyFilterForDate() throws Throwable{
 //creating List of content type for Sub department e.g:Index pages, Tables,Folders, Landing Pages
 					if(SubDeptHasChildren.size()>0)
 					{
-						System.out.println("Total index like Childrens of SubDepartment:"+subDeptsUnderDeptName+" are "+SubDeptHasChildren.size());
+					
 					for(int m=0;m<SubDeptHasChildren.size();m++)
 					{
 							String indexchildName=SubDeptHasChildren.get(m);  //Business Continuation 
-							String contentType= checkContentType(indexchildName);
+							
+							if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+indexchildName+"' and starts-with(@title,'View children')]")))
+							{
+								String contentType= checkContentType(indexchildName);
 						
 						if(contentType.contains("SAT-LandingPage"))
 						{
@@ -1499,7 +1522,11 @@ public static void applyFilterForDate() throws Throwable{
 						{
 							SAT_Table_Index_pages.add(indexchildName);
 						}
-						
+					}
+					else
+					{
+						LogFactory.info("Unable to find the xpath for title::"+indexchildName);
+					}
 					} //end of loop for fetching total tree icon contents type for Sub Department Optimization under Business Admoin & HR
 						
 					
@@ -1515,7 +1542,7 @@ public static void applyFilterForDate() throws Throwable{
 					
 					for(int rt=0;rt<SAT_Table_Index_pages.size();rt++)
 					{
-						System.out.println("Table :"+SAT_Table_Index_pages.get(rt));
+						System.out.println("Fetching content for Table :"+SAT_Table_Index_pages.get(rt));
 						subDepartmentTable=fetchTablesContent(SAT_Table_Index_pages.get(rt));// can contain Link Portlets and Child index pages
 					
 						String wcmTCID=testCaseID+testcaseNumber;
@@ -1582,12 +1609,14 @@ public static void applyFilterForDate() throws Throwable{
 					}
 					
 				wcmalrtDriver.findElement(By.xpath("//a[.='"+departmentName+"']")).click();
-					
+			}
+				else
+				{}
 			}
 		}
 		catch(Exception e)
 		{
-			
+			LogFactory.info("Error while fetching Department wise wcm Content for department: "+departmentName+" "+e.getMessage().toString());
 			System.out.println("Error while fetching Department wise wcm Content for department: "+departmentName+" "+e.getMessage().toString());
 		}
 		
@@ -1614,8 +1643,8 @@ public static void applyFilterForDate() throws Throwable{
 					String tableImageTitle=wcmalrtDriver.findElement(By.xpath("//tr["+trc+"]//td[2]//img[2]")).getAttribute("title");
 					if(!(tableImageTitle.contains("View children")))
 						{
-						String rowTitle=wcmalrtDriver.findElement(By.xpath("//tr["+trc+"]//td[2]//img[2]/following::td[1]//a")).getText();
-						tableRows.add(chceckForTitle(rowTitle));
+						String rowTitle=wcmalrtDriver.findElement(By.xpath("//tr["+trc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
+						tableRows.add(rowTitle);
 						}
 					
 					if(tableRows.size()==totalCount)
@@ -1631,6 +1660,9 @@ public static void applyFilterForDate() throws Throwable{
 				{
 				for(int rtr=0;rtr<tableRows.size();rtr++)
 				{
+					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+tableRows.get(rtr)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")))
+					{
 					wcmalrtDriver.findElement(By.xpath("//a[.='"+tableRows.get(rtr)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")).click();
 					
 					
@@ -1657,6 +1689,9 @@ public static void applyFilterForDate() throws Throwable{
 			    	   testcaseNumber++;
 			    	   closeContent.click();
 				}
+					else
+					{LogFactory.info("Unable to find the xpath for title");}
+				}
 				System.out.println("Content for Table::"+tableName+" of AT-Index type(table rows content) is fetched sucessfully ");
 				
 //now fetching table data apart from ROWS
@@ -1675,6 +1710,9 @@ public static void applyFilterForDate() throws Throwable{
 				for(int tip=0;tip<otherTableData.size();tip++)
 				{
 					String tableChildName=otherTableData.get(tip);  //Business Continuation 
+					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+tableChildName+"' and starts-with(@title,'View children')]")))
+					{
 					String tableChildContentType= checkContentType(tableChildName);
 				
 				if(tableChildContentType.contains("SAT-Child IndexPage"))
@@ -1689,7 +1727,9 @@ public static void applyFilterForDate() throws Throwable{
 				{
 					table_ChildCategoriesList.add(tableChildName);
 				}
-					
+				}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+tableChildName);}
 				}
 				
 				System.out.println("Table Index page has ::"+table_ChildIndexPagesList.size()+" Child Index pages,"+table_ChildTablesList.size()+" Table childs and "+table_ChildCategoriesList.size()+" categories");
@@ -1698,6 +1738,9 @@ public static void applyFilterForDate() throws Throwable{
 				{
 					
 					System.out.println("Fetching Child Table:: "+table_ChildTablesList.get(tcipt)+" Content for Table index page::"+tableName);// Child Table
+					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+table_ChildTablesList.get(tcipt)+"' and starts-with(@title,'View children')]")))
+					{
 					WebElement tableChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+table_ChildTablesList.get(tcipt)+"' and starts-with(@title,'View children')]"));
 								
 					String tableChildTabletitle=tableChildTable.getText(); 
@@ -1730,7 +1773,11 @@ public static void applyFilterForDate() throws Throwable{
       		   	   	testcaseNumber++;
       		 
 			   	   fetchTableRowsContentForChildTable(table_ChildTablesList.get(tcipt),tableChildIsTables,Level);
-		        
+					}
+					else
+					{
+						 LogFactory.info("Unable to find the xpath for title::"+table_ChildTablesList.get(tcipt));
+					}
 			   	
 				}
 				
@@ -1740,6 +1787,8 @@ public static void applyFilterForDate() throws Throwable{
 				{
 					System.out.println("Reading content for Category "+table_ChildCategoriesList.get(tipc)+ " of Table Index Page::"+tableName);// SALES
 					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+table_ChildCategoriesList.get(tipc)+"' and starts-with(@title,'View children')]")))
+					{
 					WebElement tableChildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+table_ChildCategoriesList.get(tipc)+"' and starts-with(@title,'View children')]"));
 								
 					String tableChildCategoryTitle=tableChildCategory.getText(); 
@@ -1757,18 +1806,24 @@ public static void applyFilterForDate() throws Throwable{
 			    	checkForNestedcategories(tableChildIsCategory,"3rdLevelIndexPageCategories");
 			    	
 			    	wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+tableName+"')]")).click();
-					
+					}
+					else
+					{ LogFactory.info("Unable to find the xpath for title::"+table_ChildCategoriesList.get(tipc));}
 					}
 				
 				for(int tcip=0;tcip<table_ChildIndexPagesList.size();tcip++)
 				{
 					tableChildIsChildIndexPage.put("3rdLevelChildIndexPage", table_ChildIndexPagesList.get(tcip));
 					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+table_ChildIndexPagesList.get(tcip)+"' and starts-with(@title,'View children')]")))
+					{
 					WebElement categoryChildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+table_ChildIndexPagesList.get(tcip)+"' and starts-with(@title,'View children')]"));
 					categoryChildIndexPage.click();
 					
 					fetchContentForChildIndexPage(tableChildIsChildIndexPage,"3rdLevelChildIndexPage");
-					
+					}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+table_ChildCategoriesList.get(tcip));}
 				}//////Check again at this point
 				
 				fetchContentTillGrandChild(otherTableData, tableStructure.get("DepartmentName"), tableStructure.get("2ndLevel"));
@@ -1816,8 +1871,8 @@ public static void applyFilterForDate() throws Throwable{
 				String childTableImageTitle=wcmalrtDriver.findElement(By.xpath("//tr["+ctrt+"]//td[2]//img[2]")).getAttribute("title");
 				if(!(childTableImageTitle.contains("View children")))
 					{
-					String childTablerowTitle=wcmalrtDriver.findElement(By.xpath("//tr["+ctrt+"]//td[2]//img[2]/following::td[1]//a")).getText();
-					allChildTableRows.add(chceckForTitle(childTablerowTitle));
+					String childTablerowTitle=wcmalrtDriver.findElement(By.xpath("//tr["+ctrt+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
+					allChildTableRows.add(childTablerowTitle);
 					}
 				if(allChildTableRows.size()==totalCount)
 					{
@@ -1832,9 +1887,9 @@ public static void applyFilterForDate() throws Throwable{
 			{
 			for(int ctr=0;ctr<allChildTableRows.size();ctr++)
 			{
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+allChildTableRows.get(ctr)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")))
+				{
 				wcmalrtDriver.findElement(By.xpath("//a[.='"+allChildTableRows.get(ctr)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")).click();
-				
-				
 				 //checking for Index page inside the link
 			 	String contentType=contentTypeOnPage.getText();	
 				String[] cType=contentType.split("/");
@@ -1859,7 +1914,12 @@ public static void applyFilterForDate() throws Throwable{
 		    	   writeWCMHeaderContentFinalToExcel();
 		    	   testcaseNumber++;
 		    	   closeContent.click();
+		    	   
 			}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+allChildTableRows.get(ctr));}
+			}
+			
 			System.out.println("AT-Index type Content for Child Table::"+childTablename+" is read successfully ");
 			
 //now fetching table data apart from ROWS
@@ -1876,6 +1936,8 @@ public static void applyFilterForDate() throws Throwable{
 			for(int tip=0;tip<otherChildTableData.size();tip++)
 			{
 				String childTableChildName=otherChildTableData.get(tip);  //Business Continuation 
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+childTableChildName+"' and starts-with(@title,'View children')]")))
+				{
 				String tableChildContentType= checkContentType(childTableChildName);
 			
 			if(tableChildContentType.contains("SAT-Grand Child IndexPage"))
@@ -1890,7 +1952,9 @@ public static void applyFilterForDate() throws Throwable{
 			{
 				ChildTable_grandChildCategories.add(childTableChildName);
 			}
-				
+				}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+childTableChildName);}
 			}
 			
 			
@@ -1900,7 +1964,9 @@ public static void applyFilterForDate() throws Throwable{
 			{
 				
 				System.out.println("Fetching Grand Child Table:: "+ChildTable_grandChildTables.get(ctgct)+" Content for Child Table index page::"+childTablename);// Child Table
-				WebElement childTableGrandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+ChildTable_grandChildTables.get(ctgct)+"' and starts-with(@title,'View children')]"));
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+ChildTable_grandChildTables.get(ctgct)+"' and starts-with(@title,'View children')]"))) {
+					WebElement childTableGrandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+ChildTable_grandChildTables.get(ctgct)+"' and starts-with(@title,'View children')]"));
 							
 				String childTableGrandChildTableTitle=childTableGrandChildTable.getText(); 
 				
@@ -1928,7 +1994,9 @@ public static void applyFilterForDate() throws Throwable{
   		   	   
   		   
 		   	   fetchTableRowsContentForGrandChildTable(ChildTable_grandChildTables.get(ctgct),childtableGrandChildTables,nextlevel);
-	        
+			}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+ChildTable_grandChildTables.get(ctgct));}
 			
 		   	
 			}
@@ -1939,7 +2007,7 @@ public static void applyFilterForDate() throws Throwable{
 			for(int ctgcc=0;ctgcc<numberOfContentsToFetch(ChildTable_grandChildCategories);ctgcc++)
 			{
 				System.out.println("Reading content for Category "+ChildTable_grandChildCategories.get(ctgcc)+ " of Child Table Index Page:"+childTablename);// SALES
-				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+ChildTable_grandChildCategories.get(ctgcc)+"' and starts-with(@title,'View children')]"))) {
 				WebElement childTableGrandChildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+ChildTable_grandChildCategories.get(ctgcc)+"' and starts-with(@title,'View children')]"));
 							
 				String childTableGrandChildCategoryTitle=childTableGrandChildCategory.getText(); 
@@ -1962,7 +2030,10 @@ public static void applyFilterForDate() throws Throwable{
 		    	
 		    	wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+childTablename+"')]")).click();
 				
-				}
+			}else
+			{ LogFactory.info("Unable to find the xpath for title::"+ChildTable_grandChildCategories.get(ctgcc));}
+			
+			}
 			
 			
 			HashMap<String, String> childTableGrandChildIsIndexPage=new HashMap<String,String>();
@@ -1977,7 +2048,7 @@ public static void applyFilterForDate() throws Throwable{
 				{
 					childTableGrandChildIsIndexPage.put("4thLevelGrandChildIndexPage", childTable_grandChildIndexPages.get(ctgcip));
 				}
-				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+childTable_grandChildIndexPages.get(ctgcip)+"' and starts-with(@title,'View children')]"))) {
 				WebElement childTableGrandChildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+childTable_grandChildIndexPages.get(ctgcip)+"' and starts-with(@title,'View children')]"));
 				childTableGrandChildIndexPage.click();
 				
@@ -2014,6 +2085,9 @@ public static void applyFilterForDate() throws Throwable{
 			    	   closeContent.click();
 					
 				}
+			}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+childTable_grandChildIndexPages.get(ctgcip));}
 				
 		}
 			
@@ -2048,6 +2122,9 @@ public static void applyFilterForDate() throws Throwable{
 		HashMap <String,String> grandChildTableContent=new HashMap<String,String>();
 		try {
 			
+			
+			if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandChildTableName+"' and contains(@title,'View children')]")))
+			{
 			wcmalrtDriver.findElement(By.xpath("//a[.='"+grandChildTableName+"' and contains(@title,'View children')]")).click();
 			
 			List<WebElement> allGrandChildTableChildContent=allChildren;
@@ -2065,8 +2142,8 @@ public static void applyFilterForDate() throws Throwable{
 				if(!(grandChildTableImageTitle.contains("View children")))
 					{
 					
-					String childTablerowTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gctc+"]//td[2]//img[2]/following::td[1]//a")).getText();
-					grandChildTableRowContent.add(chceckForTitle(childTablerowTitle));
+					String childTablerowTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gctc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
+					grandChildTableRowContent.add(childTablerowTitle);
 					}
 				
 				if(grandChildTableRowContent.size()==totalCount)
@@ -2083,6 +2160,9 @@ public static void applyFilterForDate() throws Throwable{
 			{
 			for(int gctrc=0;gctrc<grandChildTableRowContent.size();gctrc++)
 			{
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandChildTableRowContent.get(gctrc)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")))
+				{
 				wcmalrtDriver.findElement(By.xpath("//a[.='"+grandChildTableRowContent.get(gctrc)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")).click();
 				
 				 //checking for Index page inside the link
@@ -2109,6 +2189,10 @@ public static void applyFilterForDate() throws Throwable{
 		    	   writeWCMHeaderContentFinalToExcel();
 		    	   testcaseNumber++;
 		    	   closeContent.click();
+		    	   
+			}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+grandChildTableRowContent.get(gctrc));}
 			}
 			System.out.println("AT-Index type Content for Grand Child Table::"+grandChildTableName+" is fetched successfully ");
 			
@@ -2123,13 +2207,17 @@ public static void applyFilterForDate() throws Throwable{
 			
 			for(int tip=0;tip<grandChildTableIndexPageContent.size();tip++)
 			{
-				String grandChildTableCategory=grandChildTableIndexPageContent.get(tip);  //Business Continuation 
+				String grandChildTableCategory=grandChildTableIndexPageContent.get(tip); 
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandChildTableCategory+"' and starts-with(@title,'View children')]")))
+				{//Business Continuation 
 				String grandChildTableContentType= checkContentType(grandChildTableCategory);
 			
 			 if(grandChildTableContentType.contains("SAT-Default Sub-Site Area"))
 			 {grandChildTableCategories.add(grandChildTableCategory);}
 			
-				
+				}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+grandChildTableCategory);}
 			}
 			
 			
@@ -2137,6 +2225,9 @@ public static void applyFilterForDate() throws Throwable{
 			{
 				
 				System.out.println("Reading content for Category "+grandChildTableCategories.get(gctcc)+ " of Grand Child Table Index Page:"+grandChildTableName);// SALES
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandChildTableCategories.get(gctcc)+"' and starts-with(@title,'View children')]")))
+				{
 				
 				WebElement grandChildTableCategoryElement=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandChildTableCategories.get(gctcc)+"' and starts-with(@title,'View children')]"));
 							
@@ -2167,10 +2258,15 @@ public static void applyFilterForDate() throws Throwable{
 		    	
 		    	wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+grandChildTableName+"')]")).click();
 				
-				
+			}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+grandChildTableCategories.get(gctcc));}
 			}
 			
 			}	
+		}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+grandChildTableName);}
 		}
 		catch(Exception e) {
 			System.out.println("Error while fetching content for Grand Child Table::"+grandChildTableName+" "+e.getMessage().toString());
@@ -2194,6 +2290,9 @@ public static void applyFilterForDate() throws Throwable{
 			for(int lp=0;lp<sAT_LandingPages.size();lp++)
 			{
 			System.out.println("SAT Landing page ::"+sAT_LandingPages.get(lp));
+			
+			if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+sAT_LandingPages.get(lp)+"' and starts-with(@title,'View children')]")))
+			{
 			WebElement landingPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+sAT_LandingPages.get(lp)+"' and starts-with(@title,'View children')]"));
 						
 			String landingPageTitle= landingPage.getText();
@@ -2224,8 +2323,8 @@ public static void applyFilterForDate() throws Throwable{
 				
 				if(!(landingChildImageTitle.contains("View children")))
 				{
-					String linkPortlet=wcmalrtDriver.findElement(By.xpath("//tr["+lpc+"]//td[2]//img[2]/following::td[1]//a")).getText();
-					landingPageLinkPortlets.add(chceckForTitle(linkPortlet));
+					String linkPortlet=wcmalrtDriver.findElement(By.xpath("//tr["+lpc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
+					landingPageLinkPortlets.add(linkPortlet);
 				}
 					
 				
@@ -2242,7 +2341,10 @@ public static void applyFilterForDate() throws Throwable{
 				{
 					 System.out.println("fetching link portlet "+landingPageLinkPortlets.get(lplp)+" for Landing page's index page::"+landingPageTitle);
 					 String indexPageLinks=landingPageLinkPortlets.get(lplp);
-								    	
+					
+					 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]")))
+					 {
+					 
 					WebElement child12=wcmalrtDriver.findElement(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]"));
 					 child12.click();
 					 
@@ -2273,12 +2375,20 @@ public static void applyFilterForDate() throws Throwable{
 			   	   writeWCMHeaderContentFinalToExcel();
 			   	   testcaseNumber++;
 			  	   closeContent.click();
-								
+				}
+			  	   else
+			  	   {
+			  		 LogFactory.info("Unable to find the xpath for title::"+indexPageLinks); 
+			  		 
+			  	   }
 				}
 			
 			
 			System.out.println("Total child under landing page: "+landingPageTitle+" apart from Link Portlets are::"+landingPageChilds.size());System.out.println("Now checking for landing page:"+landingPageTitle+" content type apart from link portlets");
 			for(int lpct=0;lpct<landingPageChilds.size();lpct++)
+				{
+					
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+landingPageChilds.get(lpct)+"' and starts-with(@title,'View children')]")))
 				{
 					WebElement landingChildPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+landingPageChilds.get(lpct)+"' and starts-with(@title,'View children')]"));
 					String landingChildPageTitle=landingChildPage.getText(); 
@@ -2295,6 +2405,9 @@ public static void applyFilterForDate() throws Throwable{
 					
 					System.out.println("This Child of Landing page "+landingChildPageTitle+" is a "+landingPageChildType);
 				}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+landingPageChilds.get(lpct));}
+				}
 			
 			
 			
@@ -2305,6 +2418,9 @@ public static void applyFilterForDate() throws Throwable{
 			{
 				
 				System.out.println("Reading content for Landing Page's:: "+landingPageTitle+" Child table:: "+IsLanding_Child_Tables.get(lpctc));// Child Table
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsLanding_Child_Tables.get(lpctc)+"' and starts-with(@title,'View children')]")))
+				{
 				WebElement landingChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsLanding_Child_Tables.get(lpctc)+"' and starts-with(@title,'View children')]"));
 							
 				String landingChildTableTitle=landingChildTable.getText(); 
@@ -2326,7 +2442,11 @@ public static void applyFilterForDate() throws Throwable{
 		           testcaseNumber++;
 		           
 		           fetchTableRowsContentForChildTable(landingChildTableTitle,landingPageTables,"3rdLevelLandingPage");
-		       
+				}
+				else
+				{
+					LogFactory.info("Unable to find the xpath for title::"+IsLanding_Child_Tables.get(lpctc));
+				}
 			}/// all tables for Landing page read successfully
 			
 			HashMap<String,String> landingPageChildIndexPage=new HashMap<String,String>();
@@ -2335,7 +2455,9 @@ public static void applyFilterForDate() throws Throwable{
 			{
 				
 				System.out.println("Reading content for Landing Page's:: "+landingPageTitle+" Child index Page:: "+IsLanding_Child_Index_pages.get(lpcip));// Child Table
-				WebElement landingChildIndexPagee=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsLanding_Child_Tables.get(lpcip)+"' and starts-with(@title,'View children')]"));
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsLanding_Child_Index_pages.get(lpcip)+"']")))
+				{WebElement landingChildIndexPagee=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsLanding_Child_Tables.get(lpcip)+"' and starts-with(@title,'View children')]"));
 							
 				String landingChildIndexpageTitle=landingChildIndexPagee.getText(); 
 				
@@ -2347,8 +2469,15 @@ public static void applyFilterForDate() throws Throwable{
 				landingPageChildIndexPage.put("3rdLevelChildIndexPage",landingChildIndexpageTitle);
 				
 				fetchContentForChildIndexPage(landingPageChildIndexPage,"3rdLevelChildIndexPage");
-			}
+				}else
+				{
+					LogFactory.info("Unable to find the xpath for title::"+IsLanding_Child_Index_pages.get(lpcip));
+				}
 			
+			}
+			}
+			else
+			{LogFactory.info("Unable to find the xpath for title::"+sAT_LandingPages.get(lp));}
 			
 		}
 			
@@ -2364,8 +2493,10 @@ public static void applyFilterForDate() throws Throwable{
 
 
 
-	public static HashMap<String, String> fetchTablesContent(String Tablename)
+	public static HashMap<String, String> fetchTablesContent(String Tablename) throws Throwable
 	{
+		HashMap<String,String> dataToFetch=new HashMap<String,String>();
+		try {
 		String tableName=null;
 		String totalColumns=null;
 		String sortBy=null;
@@ -2382,13 +2513,14 @@ public static void applyFilterForDate() throws Throwable{
 		String headerName=null;
 		String footerName=null;
 		
-		HashMap<String,String> dataToFetch=new HashMap<String,String>();
+		//HashMap<String,String> dataToFetch=new HashMap<String,String>();
 		String fetchAttribute=wcmalrtDriver.findElement(By.xpath("//a[.='"+Tablename+"' and contains(@title,'View children')]")).getAttribute("id");
 		
 		String[] checkboxNumber=fetchAttribute.split("_");
 		String checkboxToClick =  checkboxNumber[checkboxNumber.length-1].trim();
 		
-		wcmalrtDriver.findElement(By.xpath("//input[@value='"+checkboxToClick+"']")).click();
+		ValidationFactory.getElementIfPresent(By.xpath("//input[@value='"+checkboxToClick+"']")).click();
+		//wcmalrtDriver.findElement(By.xpath("//input[@value='"+checkboxToClick+"']")).click();
 		
 		editContent.click();
 		//readContent.click();
@@ -2469,6 +2601,13 @@ public static void applyFilterForDate() throws Throwable{
 		//closeContent.click();
 		
 		return dataToFetch;
+	}
+		catch(Exception e)
+		{
+			LogFactory.info("Error while fetching table content");
+			
+		}
+		return dataToFetch;
 		
 	}
 
@@ -2512,6 +2651,9 @@ public static void applyFilterForDate() throws Throwable{
 			for(int ip=0;ip<numberOfContentsToFetch(SAT_Index_Pages);ip++)
 			{
 			System.out.println("Fetching index page::"+ SAT_Index_Pages.get(ip)+" content under Sub department::"+subDeptsUnderDeptName);
+			
+			if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+SAT_Index_Pages.get(ip)+"' and starts-with(@title,'View children')]")))
+			{
 			WebElement indexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+SAT_Index_Pages.get(ip)+"' and starts-with(@title,'View children')]"));
 						
 			String indexPageTitle= indexPage.getText();
@@ -2543,7 +2685,7 @@ public static void applyFilterForDate() throws Throwable{
 					
 					if(!(childImageTitle.contains("View children")))
 					{
-						String ChildWithNoGranChild=wcmalrtDriver.findElement(By.xpath("//tr["+cgc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+						String ChildWithNoGranChild=wcmalrtDriver.findElement(By.xpath("//tr["+cgc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 						IndexPageLinkPortlets.add(ChildWithNoGranChild);
 					}
 
@@ -2560,7 +2702,10 @@ public static void applyFilterForDate() throws Throwable{
 					{
 						 System.out.println("fetching link portlet "+IndexPageLinkPortlets.get(cng)+" for index page::"+indexPageTitle);
 						 String indexPageLinks=IndexPageLinkPortlets.get(cng);
-									    	
+						
+						 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]")))
+						 {
+						 
 						 WebElement child12=wcmalrtDriver.findElement(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]"));
 						 child12.click();
 						 
@@ -2590,7 +2735,9 @@ public static void applyFilterForDate() throws Throwable{
 				   	   writeWCMHeaderContentFinalToExcel();
 				   	   testcaseNumber++;
 				  	   closeContent.click();
-									
+					}
+				else
+				{ LogFactory.info("Unable to find the xpath for title::"+IndexPageLinkPortlets.get(cng));}
 					}
 									
 	////identifying Index page's(TCFA_Index_Page) "indexPageTitle":- Child Content Type (TCFA_Child_Index_Pag), Tables or Categories
@@ -2598,7 +2745,10 @@ public static void applyFilterForDate() throws Throwable{
 				
 					for(int z=0;z<ChildHasGrandChild.size();z++)
 						{
-							WebElement childIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+ChildHasGrandChild.get(z)+"' and starts-with(@title,'View children')]"));
+							
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+ChildHasGrandChild.get(z)+"' and starts-with(@title,'View children')]")))
+						{
+						WebElement childIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+ChildHasGrandChild.get(z)+"' and starts-with(@title,'View children')]"));
 							String childIndexPageTitle=childIndexPage.getText(); 
 							
 							String childType=checkContentType(childIndexPageTitle);
@@ -2616,6 +2766,10 @@ public static void applyFilterForDate() throws Throwable{
 							}
 							
 							System.out.println("This Child of index page "+childIndexPageTitle+" is a "+childType);
+					
+						}
+						else
+							{LogFactory.info("Unable to find the xpath for title::"+ChildHasGrandChild.get(z));}
 						}
 					
 					System.out.println("Index page: "+indexPageTitle+" has "+IsChild_Tables.size()+" Tables,"+IsChild_Categories.size()+" Categories and "+IsChild_Index_pages.size()+" Child Index Pages");
@@ -2627,6 +2781,9 @@ public static void applyFilterForDate() throws Throwable{
 					{
 						
 						System.out.println("Reading content for Index Page "+indexPageTitle+" Child table "+IsChild_Tables.get(ct));// Child Table
+						
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsChild_Tables.get(ct)+"' and starts-with(@title,'View children')]")))
+						{
 						WebElement childTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsChild_Tables.get(ct)+"' and starts-with(@title,'View children')]"));
 									
 						String childtableTitle=childTable.getText();
@@ -2649,7 +2806,9 @@ public static void applyFilterForDate() throws Throwable{
 					        testcaseNumber++;
 					       
 					        fetchTableRowsContentForChildTable(childtableTitle, indexPageChildTables,"3rdLevelIndexPage");
-				       
+					}
+					else
+					{ LogFactory.info("Unable to find the xpath for title::"+IsChild_Tables.get(ct));}
 					}/// all tables for index pages read successfully
 					
 					
@@ -2659,6 +2818,9 @@ public static void applyFilterForDate() throws Throwable{
 					{
 						//Map<String,String> categoryContent=new HashMap<String,String>();
 						System.out.println("Reading content for Category "+IsChild_Categories.get(cc)+ " of Index Page::"+indexPageTitle);// SALES
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsChild_Categories.get(cc)+"' and starts-with(@title,'View children')]")))
+						{
+						
 						WebElement childCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsChild_Categories.get(cc)+"' and starts-with(@title,'View children')]"));
 									
 						String childCategoryTitle=childCategory.getText(); 
@@ -2678,11 +2840,18 @@ public static void applyFilterForDate() throws Throwable{
 				           //wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+childCategory+"')]")).click();
 				           wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+indexPageTitle+"')]")).click();
 					}
+					else
+					{ LogFactory.info("Unable to find the xpath for title::"+IsChild_Categories.get(cc));}
+					
+					}
 					
 					//////now checking Child Index page contents
 					for(int ici=0;ici<numberOfContentsToFetch(IsChild_Index_pages);ici++)
 					{
 						System.out.println("Now fetching content for Child Index Page::"+IsChild_Index_pages.get(ici)+" for index page::"+indexPageTitle);
+						
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsChild_Index_pages.get(ici)+"' and starts-with(@title,'View children')]")))
+						{
 						WebElement childIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsChild_Index_pages.get(ici)+"' and starts-with(@title,'View children')]"));
 									
 						String childIndexPageTitle=childIndexPage.getText(); 
@@ -2711,7 +2880,7 @@ public static void applyFilterForDate() throws Throwable{
 							
 							if(!(childIndexPageContentTitle.contains("View children")))
 							{
-								String ChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+cipc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+								String ChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+cipc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 								childIndexPageLinkPortlet.add(ChildindexpageLinkPortletTitle);
 								}
 							
@@ -2728,6 +2897,9 @@ public static void applyFilterForDate() throws Throwable{
 						{
 						 System.out.println("fetching child index page link portlet::"+childIndexPageLinkPortlet.get(cilp));
 								 String childIndexLinkPortlet=childIndexPageLinkPortlet.get(cilp);
+								
+								 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))")))
+								 {
 								 WebElement childIndexLink=wcmalrtDriver.findElement(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))]"));
 								 childIndexLink.click();
 								 
@@ -2756,7 +2928,9 @@ public static void applyFilterForDate() throws Throwable{
 							    	   writeWCMHeaderContentFinalToExcel();
 							    	   testcaseNumber++;
 							    	   closeContent.click();
-								
+						}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+childIndexPageLinkPortlet.get(cilp));}
 							}
 						
 						
@@ -2765,6 +2939,9 @@ public static void applyFilterForDate() throws Throwable{
 						{
 							
 							String gccfci=grandChildContentForChildIndexPage.get(gcct);
+							
+							if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+gccfci+"' and starts-with(@title,'View children')]")))
+							{
 							String grandChildType=checkContentType(gccfci);
 							if(grandChildType.contains("SAT-Table Index Page"))
 							{
@@ -2781,7 +2958,9 @@ public static void applyFilterForDate() throws Throwable{
 							}
 							
 							System.out.println("This child:"+gccfci +" is a "+grandChildType);
-							
+							}
+							else
+							{LogFactory.info("Unable to find the xpath for title::"+gccfci);}
 						}
 						
 						 System.out.println("Child Index page::"+childIndexPageTitle+" has total::"+IsGrandChild_Tables.size()+" Grand Child tables, "+IsGrandChildIndex_Index_pages.size()+" Grand Child Index pages and "+IsGrandChildIndex_Categories.size()+" Grand Child categories" );
@@ -2792,7 +2971,9 @@ public static void applyFilterForDate() throws Throwable{
 						{
 							
 							System.out.println("Fetching Grand Child Table:: "+IsGrandChild_Tables.get(gct)+" Content");// Child Table
-							WebElement grandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]"));
+							
+							if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]")))
+								{WebElement grandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]"));
 										
 							String grandChildtableTitle=grandChildTable.getText(); 
 							
@@ -2814,7 +2995,9 @@ public static void applyFilterForDate() throws Throwable{
 					   	   testcaseNumber++;
 					   	   
 					   	   fetchTableRowsContentForGrandChildTable(grandChildtableTitle, ChildIndexPageTables,"3rdLevelIndexPage");
-					   	
+						}
+						else
+						{LogFactory.info("Unable to find the xpath for title::"+IsGrandChild_Tables.get(gct));}
 						}
 						
 						///Fetching content for Child index page's categories
@@ -2825,6 +3008,8 @@ public static void applyFilterForDate() throws Throwable{
 							
 							//Map<String,String> childCategoryContent=new HashMap<String,String>();
 							System.out.println("Reading content for Category "+IsGrandChildIndex_Categories.get(cc)+ " of Child Index Page:"+childIndexPageTitle);// SALES
+							if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChildIndex_Categories.get(cc)+"' and starts-with(@title,'View children')]")))
+							{
 							
 							WebElement grandchildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Categories.get(cc)+"' and starts-with(@title,'View children')]"));
 										
@@ -2843,7 +3028,9 @@ public static void applyFilterForDate() throws Throwable{
 					    	checkForNestedcategories(GrandChildIndex_CategoriesMap,"3rdLevelChildIndexPageCategories");
 					    	
 					    	wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+childIndexPageTitle+"')]")).click();
-							
+						}
+						else
+						{LogFactory.info("Unable to find the xpath for title::"+IsGrandChildIndex_Categories.get(cc));}
 							
 							}
 								
@@ -2852,6 +3039,10 @@ public static void applyFilterForDate() throws Throwable{
 						for(int gcip=0;gcip<numberOfContentsToFetch(IsGrandChildIndex_Index_pages);gcip++)
 						{
 							System.out.println("Now fetching content for Grand child Index Page::"+IsGrandChildIndex_Index_pages.get(gcip)+" under Child index page::"+childIndexPageTitle);
+							
+							if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChildIndex_Index_pages.get(ici)+"' and starts-with(@title,'View children')]")))
+							{
+							
 							WebElement grandchildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Index_pages.get(ici)+"' and starts-with(@title,'View children')]"));
 												
 							String grandChildIndexPageTitle=grandchildIndexPage.getText(); 
@@ -2875,7 +3066,7 @@ public static void applyFilterForDate() throws Throwable{
 										
 										if(!(grandChildIndexPageContentTitle.contains("View children")))
 										{
-											String grandChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gcipc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+											String grandChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gcipc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 											grandChildIndexPageLinkPortlet.add(grandChildindexpageLinkPortletTitle);
 										}
 
@@ -2893,7 +3084,8 @@ public static void applyFilterForDate() throws Throwable{
 									{
 									 System.out.println("Fetching Grand child index page Link portlets::"+grandChildIndexPageLinkPortlet.get(gclp));
 											 String grandchildContents=grandChildIndexPageLinkPortlet.get(gclp);
-										    	
+										    	if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandchildContents+"' and not(contains(@title, 'View children'))]")))
+										    	{
 											 WebElement grandChildLinks=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandchildContents+"' and not(contains(@title, 'View children'))]"));
 											 
 											 grandChildLinks.click();
@@ -2926,7 +3118,9 @@ public static void applyFilterForDate() throws Throwable{
 										    	   writeWCMHeaderContentFinalToExcel();
 										    	   testcaseNumber++;
 										           closeContent.click();
-										}
+									}
+										           else
+										        	   {LogFactory.info("Unable to find the xpath for title::"+grandChildIndexPageLinkPortlet.get(gclp));}}
 								 
 									List<String> IsFinalChild_Tables=new ArrayList<String>();
 									List<String> IsFinalChild_Categories=new ArrayList<String>();
@@ -2934,7 +3128,8 @@ public static void applyFilterForDate() throws Throwable{
 									for(int gchc=0;gchc<grandChildindexPageContent.size();gchc++)
 									{
 										 String grandchildWithContents=grandChildindexPageContent.get(gchc);
-									    
+									    if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandchildWithContents+"' and (contains(@title, 'View children'))]")))
+									    {
 										 WebElement finalChild=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandchildWithContents+"' and (contains(@title, 'View children'))]"));
 										 
 										 String grandChild=finalChild.getText();
@@ -2947,7 +3142,9 @@ public static void applyFilterForDate() throws Throwable{
 											{
 												IsFinalChild_Categories.add(finalChildType);
 											}
-							
+									    }
+									    else
+									    {LogFactory.info("Unable to find the xpath for title::"+grandchildWithContents);}
 									}
 						
 						//Now fetching table content for grand child index page
@@ -2956,6 +3153,9 @@ public static void applyFilterForDate() throws Throwable{
 									{
 										
 										System.out.println("Fetching Grand Child Table:: "+IsFinalChild_Tables.get(gctc)+" Content");// Child Table
+										
+										if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsFinalChild_Tables.get(gctc)+"' and starts-with(@title,'View children')]")))
+										{
 										WebElement finalGrandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsFinalChild_Tables.get(gctc)+"' and starts-with(@title,'View children')]"));
 													
 										String finalGrandChildtableTitle=finalGrandChildTable.getText(); 
@@ -2976,7 +3176,9 @@ public static void applyFilterForDate() throws Throwable{
 										excelOutput(grandChildTableCOntent);
 					      		   	   writeWCMHeaderContentFinalToExcel();
 								   	   testcaseNumber++;
-								   	
+										}
+										else
+										{LogFactory.info("Unable to find the xpath for title::"+IsFinalChild_Tables.get(gctc));}
 									}
 									
 									HashMap<String,String> FinalChild_CategoriesMap=new HashMap<String,String>();
@@ -2984,6 +3186,9 @@ public static void applyFilterForDate() throws Throwable{
 									for(int gcfcc=0;gcfcc<numberOfContentsToFetch(IsFinalChild_Categories);gcfcc++)
 									{
 										System.out.println("Reading content for Category "+IsFinalChild_Categories.get(gcfcc)+ " of Grand Child Index Page"+grandChildIndexPageTitle);// SALES
+										
+										if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsFinalChild_Categories.get(gcfcc)+"' and starts-with(@title,'View children')]")))
+										{
 										WebElement finalGrandchildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsFinalChild_Categories.get(gcfcc)+"' and starts-with(@title,'View children')]"));
 													
 										String grandChildCategoryTitle=finalGrandchildCategory.getText(); 
@@ -2998,22 +3203,33 @@ public static void applyFilterForDate() throws Throwable{
 										
 								    	checkForNestedcategories(FinalChild_CategoriesMap,"3rdLevelGrandChildIndexPageCategories");
 								    	wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+grandChildIndexPageTitle+"')]")).click();
-										
+										}
+										else
+										{LogFactory.info("Unable to find the xpath for title::"+IsFinalChild_Categories.get(gcfcc));}
 										
 										}// end of checking for nested category or not
 										
 								
 								 wcmalrtDriver.findElement(By.xpath("//a[.='"+childIndexPageTitle+"']")).click();
-											
+								 
+						}else
+								 {LogFactory.info("Unable to find the xpath for title::"+IsGrandChildIndex_Index_pages.get(ici));}
 								}///END OF GRANDCHILD INDEX PAGES
 										
 							wcmalrtDriver.findElement(By.xpath("//a[.='"+indexPageTitle+"']")).click();// navigating back to index page Business continuation
-										
-									}//END OF FOR LOOP FOR ALL CHILD INDEX PAGES
+					}		
+							else
+							{LogFactory.info("Unable to find the xpath for title::"+IsChild_Index_pages.get(ici));}
+					
+					}//END OF FOR LOOP FOR ALL CHILD INDEX PAGES
 						
 						wcmalrtDriver.findElement(By.xpath("//a[.='"+subDeptsUnderDeptName+"']")).click();
 						
-					}  //END OF FOR LOOP FOR ALL INDEX PAGES
+					
+			}
+			else
+			{LogFactory.info("Unable to find the xpath for title::"+SAT_Index_Pages.get(ip));}
+			}  //END OF FOR LOOP FOR ALL INDEX PAGES
 			
 			
 		}//END OF TRY BLOCK
@@ -3044,7 +3260,7 @@ public static void applyFilterForDate() throws Throwable{
 			for(int nc=1;nc<=categoriesContent.size();nc++)
 			{
 				String isNestedCategoryPresent=wcmalrtDriver.findElement(By.xpath("//tr["+nc+"]//td[2]//img[2]")).getAttribute("title");
-				String checkNestedategory=wcmalrtDriver.findElement(By.xpath("//tr["+nc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+				String checkNestedategory=wcmalrtDriver.findElement(By.xpath("//tr["+nc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 				if(isNestedCategoryPresent.contains("View children"))
 				{
 					nestedcategoryContent.add(checkNestedategory);
@@ -3060,6 +3276,9 @@ public static void applyFilterForDate() throws Throwable{
 			for(int cc=0;cc<numberOfContentsToFetch(categoryContent);cc++)
 			{
 				System.out.println("fetching content for normal category content:"+categoryContent.get(cc));
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+categoryContent.get(cc)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")))
+				{
 				wcmalrtDriver.findElement(By.xpath("//a[.='"+categoryContent.get(cc)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")).click();
 			
 				String wcmTCID=testCaseID+testcaseNumber;
@@ -3069,6 +3288,9 @@ public static void applyFilterForDate() throws Throwable{
 		      		writeWCMHeaderContentFinalToExcel();
 		    	   testcaseNumber++;
 		    	   closeContent.click();
+				}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+categoryContent.get(cc));}
 				}
 			
 			
@@ -3104,6 +3326,9 @@ public static void applyFilterForDate() throws Throwable{
 				for(int ncct=0;ncct<IsCategoryChild_NestedCategories.size();ncct++)
 				{
 					System.out.println("fetching content for nested category:"+IsCategoryChild_NestedCategories.get(ncct));
+					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsCategoryChild_NestedCategories.get(ncct)+"' and (contains(@title, 'View children'))]")))
+					{
 					String nestedcategoryTitle=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsCategoryChild_NestedCategories.get(ncct)+"' and (contains(@title, 'View children'))]")).getText();
 					//SUB SALES
 					
@@ -3121,7 +3346,9 @@ public static void applyFilterForDate() throws Throwable{
 			    	   writeWCMHeaderContentFinalToExcel();
 			    	   testcaseNumber++;
 			    	   closeContent.click();
-			    	   
+					}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+IsCategoryChild_NestedCategories.get(ncct));}
 			     	   
 				}
 				if(IsCategoryChild_NestedCategories.size()>0)
@@ -3132,12 +3359,16 @@ public static void applyFilterForDate() throws Throwable{
 				for(int cciip=0;cciip<IsCategoryChild_Index_pages.size();cciip++)
 				{
 					wcmKeyValuePair.put("3rdLevelChildIndexPage", IsCategoryChild_Index_pages.get(cciip));
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsCategoryChild_Index_pages.get(cciip)+"' and starts-with(@title,'View children')]")))
+					{
 					
 					WebElement categoryChildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsCategoryChild_Index_pages.get(cciip)+"' and starts-with(@title,'View children')]"));
 					categoryChildIndexPage.click();
 					
 					fetchContentForChildIndexPage(wcmKeyValuePair,"3rdLevelChildIndexPage");
-					
+					}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+IsCategoryChild_Index_pages.get(cciip));}
 				}
 				
 				}
@@ -3176,8 +3407,8 @@ public static void applyFilterForDate() throws Throwable{
 			
 			if(!(childIndexPageContentTitle.contains("View children")))
 			{
-				String ChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+cipc+"]//td[2]//img[2]/following::td[1]//a")).getText();
-				childIndexPageLinkPortlet.add(chceckForTitle(ChildindexpageLinkPortletTitle));
+				String ChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+cipc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
+				childIndexPageLinkPortlet.add(ChildindexpageLinkPortletTitle);
 			}
 			
 			if(childIndexPageLinkPortlet.size()==totalCount)
@@ -3194,6 +3425,9 @@ public static void applyFilterForDate() throws Throwable{
 		 
 		System.out.println("fetching child index page link portlet:;"+childIndexPageLinkPortlet.get(cilp));
 		String childIndexLinkPortlet=childIndexPageLinkPortlet.get(cilp);
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))]")))
+		{
+		
 		WebElement childIndexLink=wcmalrtDriver.findElement(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))]"));
 		childIndexLink.click();
 		 
@@ -3224,10 +3458,16 @@ public static void applyFilterForDate() throws Throwable{
 		       testcaseNumber++;
 		       closeContent.click();
 		}
+		else
+		{ LogFactory.info("Unable to find the xpath for title::"+childIndexPageLinkPortlet.get(cilp));}
+		}
 		// creating list for Child index page content apart from link portlets
 		for(int gcct=0;gcct<grandChildContentForChildIndexPage.size();gcct++)
 		{
 		String gccfci=grandChildContentForChildIndexPage.get(gcct);
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+gccfci+"' and starts-with(@title,'View children')]")))
+		{
+		
 		String grandChildType=checkContentType(gccfci);
 		if(grandChildType.contains("SAT-Table Index Page"))
 		{
@@ -3243,12 +3483,18 @@ public static void applyFilterForDate() throws Throwable{
 		}
 		System.out.println("This child:"+gccfci +" is a "+grandChildType);
 		}
+		else
+		{LogFactory.info("Unable to find the xpath for title::"+gccfci);}
+		}
 		System.out.println("Child Index page::"+tableChildIsChildIndexPage.get(Level)+" has total::"+IsGrandChild_Tables.size()+" tables, "+IsGrandChildIndex_Index_pages.size()+" grand child Index pages and "+IsGrandChildIndex_Categories.size()+" categories" );
 		 
 		//fetching content for Child index page's tables
 		for(int gct=0;gct<numberOfContentsToFetch(IsGrandChild_Tables);gct++)
 		{
 		System.out.println("Fetching Grand Child Table:: "+IsGrandChild_Tables.get(gct)+" Content");// Child Table
+		
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]")))
+		{
 		WebElement grandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]"));
 		String grandChildtableTitle=grandChildTable.getText(); 
 		String wcmTCID=testCaseID+testcaseNumber;
@@ -3268,13 +3514,18 @@ public static void applyFilterForDate() throws Throwable{
 		         
 		   writeWCMHeaderContentFinalToExcel();
 		        testcaseNumber++;
-		     
+		   
+		}
+		else
+		{ LogFactory.info("Unable to find the xpath for title::"+IsGrandChild_Tables.get(gct));}
 		}
 		///Fetching content for Child index page's categories
 		for(int cc=0;cc<numberOfContentsToFetch(IsGrandChildIndex_Categories);cc++)
 		{
 		System.out.println("Reading content for Category "+IsGrandChildIndex_Categories.get(cc)+ " of Child Index Page:"+tableChildIsChildIndexPage.get("3rdLevelChildIndexPage"));// SALES
-		WebElement grandchildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Categories.get(cc)+"' and starts-with(@title,'View children')]"));
+		
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChildIndex_Categories.get(cc)+"' and starts-with(@title,'View children')]")))
+			{WebElement grandchildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Categories.get(cc)+"' and starts-with(@title,'View children')]"));
 		String childCategoryTitle=grandchildCategory.getText(); 
 		grandchildCategory.click(); //tools and documents
 		System.out.println("Category ::"+childCategoryTitle+" for Child index page:"+tableChildIsChildIndexPage.get("3rdLevelChildIndexPage")+" is clicked");//Child index page first category clicked
@@ -3295,6 +3546,9 @@ public static void applyFilterForDate() throws Throwable{
 		    
 		    wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+tableChildIsChildIndexPage.get(Level)+"')]")).click();
 		}
+		else
+		{LogFactory.info("Unable to find the xpath for title::"+IsGrandChildIndex_Categories.get(cc));}
+		}
 		
 		if(Level.contains("3rdLevelChildIndexPage") || Level.contains("3rdLevelLandingPage")) {
 		wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+tableChildIsChildIndexPage.get("3rdLevelIndexPageCategories")+"')]")).click();}
@@ -3305,7 +3559,10 @@ public static void applyFilterForDate() throws Throwable{
 		for(int gcip=0;gcip<numberOfContentsToFetch(IsGrandChildIndex_Index_pages);gcip++)
 		{
 		System.out.println("Now fetching content for Grand child Index Page::"+IsGrandChildIndex_Index_pages.get(gcip)+" under Child index page::"+tableChildIsChildIndexPage.get("3rdLevelChildIndexPage"));
-		WebElement grandchildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Index_pages.get(gcip)+"' and starts-with(@title,'View children')]"));
+		
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChildIndex_Index_pages.get(gcip)+"' and starts-with(@title,'View children')]")))
+		{
+			WebElement grandchildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Index_pages.get(gcip)+"' and starts-with(@title,'View children')]"));
 		String grandChildIndexPageTitle=grandchildIndexPage.getText(); 
 
 		//now checking for the inside content for the CHILD INDEX PAGE (TCFA_Child_Index_Page) 
@@ -3326,7 +3583,7 @@ public static void applyFilterForDate() throws Throwable{
 			
 			if(!(grandChildIndexPageContentTitle.contains("View children")))
 			{
-				String grandChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gcipc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+				String grandChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gcipc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 				grandChildIndexPageLinkPortlet.add(grandChildindexpageLinkPortletTitle);
 			}
 			
@@ -3342,7 +3599,8 @@ public static void applyFilterForDate() throws Throwable{
 		{
 		System.out.println("Fetching Grand child index page Link portlets::"+grandChildIndexPageLinkPortlet.get(gclp));
 		String grandchildContents=grandChildIndexPageLinkPortlet.get(gclp);
-		    
+		 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandchildContents+"' and not(contains(@title, 'View children'))]")))
+		 {
 		WebElement grandChildLinks=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandchildContents+"' and not(contains(@title, 'View children'))]"));
 		 
 		grandChildLinks.click();
@@ -3378,13 +3636,17 @@ public static void applyFilterForDate() throws Throwable{
 		       testcaseNumber++;
 		           closeContent.click();
 		}
+		else
+		{ LogFactory.info("Unable to find the xpath for title::"+grandChildIndexPageLinkPortlet.get(gclp));}
+		}
 		 
 		List<String> IsFinalChild_Tables=new ArrayList<String>();
 		List<String> IsFinalChild_Categories=new ArrayList<String>();
 		for(int gchc=0;gchc<grandChildindexPageContent.size();gchc++)
 		{
 		String grandchildWithContents=grandChildindexPageContent.get(gchc);
-		    
+		    if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandchildWithContents+"' and (contains(@title, 'View children'))]")))
+		    {
 		WebElement finalChild=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandchildWithContents+"' and (contains(@title, 'View children'))]"));
 		 
 		String grandChild=finalChild.getText();
@@ -3398,10 +3660,16 @@ public static void applyFilterForDate() throws Throwable{
 		IsFinalChild_Categories.add(finalChildType);
 		}
 		}
+		else
+		{LogFactory.info("Unable to find the xpath for title::"+grandchildWithContents);}
+		}
 		//Now fetching table content for grand child index page
 		for(int gctc=0;gctc<numberOfContentsToFetch(IsFinalChild_Tables);gctc++)
 		{
 		System.out.println("Fetching Grand Child Table:: "+IsFinalChild_Tables.get(gctc)+" Content");// Child Table
+		
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsFinalChild_Tables.get(gctc)+"' and starts-with(@title,'View children')]")))
+		{
 		WebElement finalGrandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsFinalChild_Tables.get(gctc)+"' and starts-with(@title,'View children')]"));
 		String finalGrandChildtableTitle=finalGrandChildTable.getText(); 
 		String wcmTCID=testCaseID+testcaseNumber;
@@ -3419,12 +3687,17 @@ public static void applyFilterForDate() throws Throwable{
 		         
 		   writeWCMHeaderContentFinalToExcel();
 		        testcaseNumber++;
-		     
+		}
+		else
+		{ LogFactory.info("Unable to find the xpath for title::"+IsFinalChild_Tables.get(gctc));}
 		}
 		// fetching grand child categoryies content
 		for(int gcfcc=0;gcfcc<numberOfContentsToFetch(IsFinalChild_Categories);gcfcc++)
 		{
 		System.out.println("Reading content for Category "+IsFinalChild_Categories.get(gcfcc)+ " of Grand Child Index Page"+grandChildIndexPageTitle);// SALES
+		
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsFinalChild_Categories.get(gcfcc)+"' and starts-with(@title,'View children')]")))
+		{
 		WebElement finalGrandchildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsFinalChild_Categories.get(gcfcc)+"' and starts-with(@title,'View children')]"));
 		String grandChildCategoryTitle=finalGrandchildCategory.getText(); 
 		finalGrandchildCategory.click();  //Child index page first category clicked
@@ -3443,8 +3716,15 @@ public static void applyFilterForDate() throws Throwable{
 		
 		   
 		    wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+grandChildIndexPageTitle+"')]")).click();
+		}
+		else
+		{LogFactory.info("Unable to find the xpath for title::"+IsFinalChild_Categories.get(gcfcc));}
 		}// end of checking for nested category or not
 		wcmalrtDriver.findElement(By.xpath("//a[.='"+tableChildIsChildIndexPage.get(Level)+"']")).click();
+		}
+		else
+		{LogFactory.info("Unable to find the xpath for title::"+IsGrandChildIndex_Index_pages.get(gcip));}
+		
 		}///END OF GRANDCHILD INDEX PAGES
 		//wcmalrtDriver.findElement(By.xpath("//a[.='"+indexPageTitle+"']")).click();// navigating back to index page Business continuation
 		}//END OF FOR LOOP FOR ALL CHILD INDEX PAGES
@@ -3508,6 +3788,9 @@ public static void applyFilterForDate() throws Throwable{
 				for(int ncc=0;ncc<=numberOfContentsToFetch(nestedcategoryContent);ncc++)
 				{
 				System.out.println("fetching content for nested category:"+nestedcategoryContent.get(ncc));
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+nestedcategoryContent.get(ncc)+"' and (contains(@title, 'View children'))]")))
+				{
 				String nestedcategoryTitle=wcmalrtDriver.findElement(By.xpath("//a[.='"+nestedcategoryContent.get(ncc)+"' and (contains(@title, 'View children'))]")).getText();
 				//SUB SALES
 				
@@ -3530,13 +3813,18 @@ public static void applyFilterForDate() throws Throwable{
 		    	   closeContent.click();
 		    	   
 		    	   wcmalrtDriver.findElement(By.xpath("//li[.='"+nestedcategoryTitle+"']/preceding::a[.='"+wcmKeyValue.get(categoryType)+"'][1]")).click();
-		    	   
+				}
+				else
+				{ LogFactory.info("Unable to find the xpath for title::"+nestedcategoryContent.get(ncc));}
 				}
 			}
 			
 			for(int cc=0;cc<numberOfContentsToFetch(categoryContent);cc++)
 				{
 				System.out.println("fetching content for normal category content:"+categoryContent.get(cc));
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+categoryContent.get(cc)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")))
+				{
 				wcmalrtDriver.findElement(By.xpath("//a[.='"+categoryContent.get(cc)+"' and not(contains(@title, 'View children')) and not(contains(@title, 'Navigate to'))]")).click();
 			
 				String wcmTCID=testCaseID+testcaseNumber;
@@ -3546,6 +3834,10 @@ public static void applyFilterForDate() throws Throwable{
 		      		writeWCMHeaderContentFinalToExcel();
 		    	   testcaseNumber++;
 		    	   closeContent.click();
+				
+				}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+categoryContent.get(cc));}
 				}
 		}
 		
@@ -3650,7 +3942,10 @@ public static void applyFilterForDate() throws Throwable{
 			{
 			System.out.println("SAT Folder page number : "+sAT_Folders.get(folder));//
 			//
-			WebElement folderPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+sAT_Folders.get(folder)+"' and starts-with(@title,'View children')]"));
+			
+			if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+sAT_Folders.get(folder)+"' and starts-with(@title,'View children')]")))
+			{
+				WebElement folderPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+sAT_Folders.get(folder)+"' and starts-with(@title,'View children')]"));
 						
 			String folderTitle= folderPage.getText();
 					
@@ -3678,7 +3973,7 @@ public static void applyFilterForDate() throws Throwable{
 				
 				if(!(folderChildImageTitle.contains("View children")))
 				{
-					String linkPortlet=wcmalrtDriver.findElement(By.xpath("//tr["+fc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+					String linkPortlet=wcmalrtDriver.findElement(By.xpath("//tr["+fc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 					folderLinkPortlets.add(linkPortlet);
 				}
 				if(folderLinkPortlets.size()==totalCount)
@@ -3688,16 +3983,14 @@ public static void applyFilterForDate() throws Throwable{
 
 			}
 			
-			
-			
-		
 			///writing index page(TCFA_Index_Page) Link Portlets contents
 								
 			for(int flp=0;flp<numberOfContentsToFetch(folderLinkPortlets);flp++)
 				{
 					 System.out.println("fetching link portlet "+folderLinkPortlets.get(flp)+" for Folder::"+folderTitle);
 					 String indexPageLinks=folderLinkPortlets.get(flp);
-								    	
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]")))
+					{
 					WebElement child12=wcmalrtDriver.findElement(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]"));
 					 child12.click();
 					 
@@ -3729,14 +4022,18 @@ public static void applyFilterForDate() throws Throwable{
 			   	   writeWCMHeaderContentFinalToExcel();
 			   	   testcaseNumber++;
 			  	   closeContent.click();
-								
+				}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+folderLinkPortlets.get(flp));}
 				}
 		
 			System.out.println("Total child under folder: "+folderTitle+" apart from Link Portlets are::"+folderChilds.size());
 			System.out.println("Now checking for folder's :"+folderTitle+" child content type apart from link portlets");
 			for(int Fct=0;Fct<folderChilds.size();Fct++)
 				{
-					WebElement folderChildPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+folderChilds.get(Fct)+"' and starts-with(@title,'View children')]"));
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+folderChilds.get(Fct)+"' and starts-with(@title,'View children')]")))
+				{
+				WebElement folderChildPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+folderChilds.get(Fct)+"' and starts-with(@title,'View children')]"));
 					String folderChildPageTitle=folderChildPage.getText(); 
 					
 					String folderPageChildType=checkContentType(folderChildPageTitle);
@@ -3755,6 +4052,9 @@ public static void applyFilterForDate() throws Throwable{
 					
 					System.out.println("This Child of Landing page "+folderChildPageTitle+" is a "+folderPageChildType);
 				}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+folderChilds.get(Fct));}
+				}
 			
 			
 			
@@ -3763,9 +4063,10 @@ public static void applyFilterForDate() throws Throwable{
 			HashMap<String,String> folderChildTableMap=new HashMap<String,String>();
 			for(int fctc=0;fctc<numberOfContentsToFetch(Isfolder_Child_Tables);fctc++)
 			{
-				
-				
 				System.out.println("Reading content for Index Page "+folderTitle+" Child table "+Isfolder_Child_Tables.get(fctc));// Child Table
+				
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+Isfolder_Child_Tables.get(fctc)+"' and starts-with(@title,'View children')]")))
+				{
 				WebElement folderChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+Isfolder_Child_Tables.get(fctc)+"' and starts-with(@title,'View children')]"));
 							
 				String folderChildTableTitle=folderChildTable.getText(); 
@@ -3790,7 +4091,9 @@ public static void applyFilterForDate() throws Throwable{
 		        fetchTableRowsContent(folderChildTableTitle, folderChildTableMap,"4thLevelIndexPage");  
 		        
 		           //fetchTableRowsContentForChildTable(folderChildTableTitle, folderChildTableMap)
-		       
+			}
+			else
+			{LogFactory.info("Unable to find the xpath for title::"+Isfolder_Child_Tables.get(fctc));}
 			}
 			
 			
@@ -3803,8 +4106,10 @@ public static void applyFilterForDate() throws Throwable{
 			{
 				System.out.println("fetching landing page "+IsChild_LandingPage.get(fctc)+" for Folder::"+folderTitle);
 				 String fourthLevelLandingPagetitle=IsChild_LandingPage.get(fctc);
-							    	
-				WebElement childLandingPagefolder=wcmalrtDriver.findElement(By.xpath("//a[.='"+fourthLevelLandingPagetitle+"' and contains(@title, 'View children')]"));
+				
+				 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+fourthLevelLandingPagetitle+"' and contains(@title, 'View children')]")))
+				 {
+					 WebElement childLandingPagefolder=wcmalrtDriver.findElement(By.xpath("//a[.='"+fourthLevelLandingPagetitle+"' and contains(@title, 'View children')]"));
 				childLandingPagefolder.click();
 								 	
 		    	
@@ -3831,7 +4136,7 @@ public static void applyFilterForDate() throws Throwable{
 					if(!(subDeptImageTitle.contains("View children")))
 					{
 						String SubDeptNoChildName = wcmalrtDriver
-								.findElement(By.xpath("//tr[" + sdc + "]//td[2]//img[2]/following::td[1]//a"))
+								.findElement(By.xpath("//tr[" + sdc + "]//td[2]//img[2]/following::td[1]//a/span"))
 								.getText();
 						FolderlandingLinkPortlets.add(SubDeptNoChildName);
 					}
@@ -3847,8 +4152,10 @@ public static void applyFilterForDate() throws Throwable{
 		    	for(int fcIp = 0 ;fcIp< FolderlandingLinkPortlets.size();fcIp++) {
 		    		System.out.println("fetching link portlet "+FolderlandingLinkPortlets.get(fcIp)+" for index page::"+childLandingPagefolder);
 					 String linkPortletForLandingPagetitle=FolderlandingLinkPortlets.get(fcIp);
-								    	
-					WebElement linkPortletForLandingPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+linkPortletForLandingPagetitle+"' and not(contains(@title, 'View children'))]"));
+					
+					 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+linkPortletForLandingPagetitle+"' and not(contains(@title, 'View children'))]"))) {
+					
+						 WebElement linkPortletForLandingPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+linkPortletForLandingPagetitle+"' and not(contains(@title, 'View children'))]"));
 					linkPortletForLandingPage.click();
 									 	
 			    	
@@ -3883,14 +4190,19 @@ public static void applyFilterForDate() throws Throwable{
 				   	   writeWCMHeaderContentFinalToExcel();
 				   	   testcaseNumber++;
 				  	   closeContent.click();
-
+		    	}
+		    	else
+		    	{LogFactory.info("Unable to find the xpath for title::"+FolderlandingLinkPortlets.get(fcIp));}
 			  }
 		    	
 		    	
 		    	
 		    	for(int Fct=0;Fct<FolderLandingHasChildren.size();Fct++)
 				{
-					WebElement folderChildPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+FolderLandingHasChildren.get(Fct)+"' and starts-with(@title,'View children')]"));
+					
+		    		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+FolderLandingHasChildren.get(Fct)+"' and starts-with(@title,'View children')]")))
+		    		{
+		    		WebElement folderChildPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+FolderLandingHasChildren.get(Fct)+"' and starts-with(@title,'View children')]"));
 					String folderChildPageTitle=folderChildPage.getText(); 
 					
 					String folderPageChildType=checkContentType(folderChildPageTitle);
@@ -3904,13 +4216,17 @@ public static void applyFilterForDate() throws Throwable{
 					}
 					
 					System.out.println("This Child of Landing page "+folderChildPageTitle+" is a "+folderPageChildType);
+		    		}
+		    		else
+		    		{LogFactory.info("Unable to find the xpath for title::"+FolderLandingHasChildren.get(Fct));}
 				}
 		    	
 		    	
 		    	for(int flpcip=0;flpcip<Islanding_Child_Index_pages.size();flpcip++)
 		    	{
 		    		String folderLandingPageChildIndexPageTitle=Islanding_Child_Index_pages.get(flpcip);
-			    	
+			    	if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+folderLandingPageChildIndexPageTitle+"' and (contains(@title, 'View children'))]")))
+			    	{
 					WebElement folderLandingPageChildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+folderLandingPageChildIndexPageTitle+"' and (contains(@title, 'View children'))]"));
 					folderLandingPageChildIndexPage.click();
 									 	
@@ -3925,15 +4241,19 @@ public static void applyFilterForDate() throws Throwable{
 
 			    	
 			    	fetchContentForChildIndexPage(wcmKeyValueF,"4thLevelChildIndexPage");
+
+		    	}
+		    	else
+		    	{LogFactory.info("Unable to find the xpath for title::"+Islanding_Child_Index_pages.get(flpcip));}
 		    	}
 		    	
 		    	HashMap <String,String> folderLandingPageTableMap=new HashMap<String,String>();
 			   	   //add for loop for table and  child index pages.
 		    	for(int flpct=0;flpct<numberOfContentsToFetch(Islanding_Child_Tables);flpct++)
-				{
-					
-					
+				{	
 					System.out.println("Reading content for Index Page "+folderTitle+" Child table "+Islanding_Child_Tables.get(flpct));// Child Table
+				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+Islanding_Child_Tables.get(flpct)+"' and starts-with(@title,'View children')]")))
+				{
 					WebElement folderlandingChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+Islanding_Child_Tables.get(flpct)+"' and starts-with(@title,'View children')]"));
 								
 					String folderChildlandingTableTitle=folderlandingChildTable.getText(); 
@@ -3956,10 +4276,14 @@ public static void applyFilterForDate() throws Throwable{
 			        testcaseNumber++;
 			        
 			        fetchTableRowsContentForGrandChildTable(folderChildlandingTableTitle, folderLandingPageTableMap,"4thLevelChildIndexPage");
-			       
+				}
+		    	else
+		    	{LogFactory.info("Unable to find the xpath for title::"+Islanding_Child_Tables.get(flpct));}
 				}
 		    			
-		
+			}
+			else
+			{LogFactory.info("Unable to find the xpath for title::"+IsChild_LandingPage.get(fctc));}
 			
 			}
 			/// all tables for Landing page read successfully
@@ -3968,7 +4292,9 @@ public static void applyFilterForDate() throws Throwable{
 		
 			wcmalrtDriver.findElement(By.xpath("//a[.='"+subDeptsUnderDeptName+"']")).click();
 		
-			
+			}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+sAT_Folders.get(folder));}
 			}
 			
 		}
@@ -3993,7 +4319,10 @@ public static void applyFilterForDate() throws Throwable{
 		for(int ip=0;ip<numberOfContentsToFetch(SAT_FolderIndex_Pages);ip++)
 		{
 		System.out.println("SAT_Index page number"+(++ip)+" : "+SAT_FolderIndex_Pages.get(ip));
-		WebElement fourththLevelIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+SAT_FolderIndex_Pages.get(ip)+"' and starts-with(@title,'View children')]"));
+		
+		if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+SAT_FolderIndex_Pages.get(ip)+"' and starts-with(@title,'View children')]")))
+		{
+			WebElement fourththLevelIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+SAT_FolderIndex_Pages.get(ip)+"' and starts-with(@title,'View children')]"));
 					
 		String fourthLevelIndexPagetitle= fourththLevelIndexPage.getText();
 				
@@ -4023,7 +4352,7 @@ public static void applyFilterForDate() throws Throwable{
 				
 				if(!(childImageTitle.contains("View children")))
 				{
-					String ChildWithNoGranChild=wcmalrtDriver.findElement(By.xpath("//tr["+cgc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+					String ChildWithNoGranChild=wcmalrtDriver.findElement(By.xpath("//tr["+cgc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 					IndexPageLinkPortlets.add(ChildWithNoGranChild);
 				}
 				if(IndexPageLinkPortlets.size()==totalCount)
@@ -4043,7 +4372,8 @@ public static void applyFilterForDate() throws Throwable{
 				{
 					 System.out.println("fetching link portlet "+IndexPageLinkPortlets.get(cng)+" for Folder's index page::"+fourthLevelIndexPagetitle);
 					 String indexPageLinks=IndexPageLinkPortlets.get(cng);
-								    	
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]")))
+					{
 					WebElement child12=wcmalrtDriver.findElement(By.xpath("//a[.='"+indexPageLinks+"' and not(contains(@title, 'View children'))]"));
 					 child12.click();
 					
@@ -4074,6 +4404,9 @@ public static void applyFilterForDate() throws Throwable{
 			   	   writeWCMHeaderContentFinalToExcel();
 			   	   testcaseNumber++;
 			  	   closeContent.click();
+				}
+			else
+			{ LogFactory.info("Unable to find the xpath for title::"+IndexPageLinkPortlets.get(cng));}
 								
 				}
 								
@@ -4082,7 +4415,10 @@ public static void applyFilterForDate() throws Throwable{
 			System.out.println("Now checking for Index page:"+fourthLevelIndexPagetitle+" content type apart from link portlets");
 				for(int z=0;z<ChildHasGrandChild.size();z++)
 					{
-						WebElement childIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+ChildHasGrandChild.get(z)+"' and starts-with(@title,'View children')]"));
+						
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+ChildHasGrandChild.get(z)+"' and starts-with(@title,'View children')]")))
+					{
+					WebElement childIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+ChildHasGrandChild.get(z)+"' and starts-with(@title,'View children')]"));
 						String childIndexPageTitle=childIndexPage.getText(); 
 						
 						String childType=checkContentType(childIndexPageTitle);
@@ -4102,14 +4438,18 @@ public static void applyFilterForDate() throws Throwable{
 						
 						System.out.println("This Child of index page "+childIndexPageTitle+" is a "+childType);
 					}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+ChildHasGrandChild.get(z));}
+					}
 				
 				System.out.println("Index page: "+fourthLevelIndexPagetitle+" has "+IsChild_Tables.size()+" Tables,"+IsChild_Categories.size()+" Categories and "+IsChild_Index_pages.size()+" Child Index Pages");
 				//NOW READING INDEX PAGE TABLES
 				
 				for(int ct=0;ct<numberOfContentsToFetch(IsChild_Tables);ct++)
 				{
-					
 					System.out.println("Reading content for Index Page "+fourthLevelIndexPagetitle+" Child table "+IsChild_Tables.get(ct));// Child Table
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsChild_Tables.get(ct)+"' and starts-with(@title,'View children')]")))
+					{
 					WebElement childTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsChild_Tables.get(ct)+"' and starts-with(@title,'View children')]"));
 								
 					String childtableTitle=childTable.getText(); 
@@ -4129,6 +4469,9 @@ public static void applyFilterForDate() throws Throwable{
 					excelOutput(wcmKeyValue1);
       		           writeWCMHeaderContentFinalToExcel();
 			           testcaseNumber++;
+				}
+				else
+				{ LogFactory.info("Unable to find the xpath for title::"+IsChild_Tables.get(ct));}
 			       
 				}/// all tables for index pages read successfully
 				
@@ -4139,6 +4482,9 @@ public static void applyFilterForDate() throws Throwable{
 				{
 					//Map<String,String> categoryContent=new HashMap<String,String>();
 					System.out.println("Reading content for Category "+IsChild_Categories.get(cc)+ " of Index Page::"+fourthLevelIndexPagetitle);// SALES
+					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsChild_Categories.get(cc)+"' and starts-with(@title,'View children')]")))
+					{	
 					WebElement childCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsChild_Categories.get(cc)+"' and starts-with(@title,'View children')]"));
 								
 					String childCategoryTitle=childCategory.getText(); 
@@ -4158,12 +4504,18 @@ public static void applyFilterForDate() throws Throwable{
 			           //wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+childCategory+"')]")).click();
 			           wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+fourthLevelIndexPagetitle+"')]")).click();
 				}
+				else
+				{ LogFactory.info("Unable to find the xpath for title::"+IsChild_Categories.get(cc));}
+				}
 				
 				//////now checking Child Index page contents
 				for(int ici=0;ici<numberOfContentsToFetch(IsChild_Index_pages);ici++)
 				{
 					System.out.println("Now fetching content for Child Index Page::"+IsChild_Index_pages.get(ici)+" for index page::"+fourthLevelIndexPagetitle);
-					WebElement fourthgrandchildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsChild_Index_pages.get(ici)+"' and starts-with(@title,'View children')]"));
+					
+					if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsChild_Index_pages.get(ici)+"' and starts-with(@title,'View children')]")))
+					{
+						WebElement fourthgrandchildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsChild_Index_pages.get(ici)+"' and starts-with(@title,'View children')]"));
 								
 					String fourthlevelchildIndexPageTitle=fourthgrandchildIndexPage.getText(); 
 
@@ -4192,7 +4544,7 @@ public static void applyFilterForDate() throws Throwable{
 						
 						if(!(childIndexPageContentTitle.contains("View children")))
 						{
-							String ChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+cipc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+							String ChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+cipc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 							childIndexPageLinkPortlet.add(ChildindexpageLinkPortletTitle);
 						}
 
@@ -4209,6 +4561,9 @@ public static void applyFilterForDate() throws Throwable{
 					{
 					 System.out.println("fetching child index page link portlet:;"+childIndexPageLinkPortlet.get(cilp));
 							 String childIndexLinkPortlet=childIndexPageLinkPortlet.get(cilp);
+							 
+							 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))]")))
+							 {
 							 WebElement childIndexLink=wcmalrtDriver.findElement(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))]"));
 							 childIndexLink.click();
 							 
@@ -4241,13 +4596,17 @@ public static void applyFilterForDate() throws Throwable{
 						    	   testcaseNumber++;
 						    	   closeContent.click();
 							
+					}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+childIndexPageLinkPortlet.get(cilp));}
 						}
 					
 					
 					// creating list for Child index page content apart from link portlets
 					for(int gcct=0;gcct<grandChildContentForChildIndexPage.size();gcct++)
 					{
-						
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandChildContentForChildIndexPage.get(gcct)+"' and starts-with(@title,'View children')]")))
+						{
 						String gccfci=grandChildContentForChildIndexPage.get(gcct);
 						String grandChildType=checkContentType(gccfci);
 						if(grandChildType.contains("SAT-Table Index Page"))
@@ -4265,7 +4624,9 @@ public static void applyFilterForDate() throws Throwable{
 						}
 						
 						System.out.println("This child:"+gccfci +" is a "+grandChildType);
-						
+						}
+						else
+						{LogFactory.info("Unable to find the xpath for title::"+grandChildContentForChildIndexPage.get(gcct));}
 					}
 					
 					 System.out.println("Child Index page::"+fourthlevelchildIndexPageTitle+" has total::"+IsGrandChild_Tables.size()+" tables, "+IsGrandChildIndex_Index_pages.size()+" Index pages and "+IsGrandChildIndex_Categories.size()+" categories" );
@@ -4273,9 +4634,11 @@ public static void applyFilterForDate() throws Throwable{
 					//fetching content for Child index page's tables
 					for(int gct=0;gct<numberOfContentsToFetch(IsGrandChild_Tables);gct++)
 					{
-						
 						System.out.println("Fetching Grand Child Table:: "+IsGrandChild_Tables.get(gct)+" Content");// Child Table
-						WebElement grandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]"));
+						
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]")))
+						{
+							WebElement grandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChild_Tables.get(gct)+"' and starts-with(@title,'View children')]"));
 									
 						String grandChildtableTitle=grandChildTable.getText(); 
 						
@@ -4297,6 +4660,10 @@ public static void applyFilterForDate() throws Throwable{
 						excelOutput(wcmKeyValue1);
 	      		   	   writeWCMHeaderContentFinalToExcel();
 				   	   testcaseNumber++;
+					}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+IsGrandChild_Tables.get(gct));
+}
 				   	
 					}
 					
@@ -4305,10 +4672,10 @@ public static void applyFilterForDate() throws Throwable{
 					
 					for(int cc=0;cc<numberOfContentsToFetch(IsGrandChildIndex_Categories);cc++)
 					{
-						
-						//Map<String,String> childCategoryContent=new HashMap<String,String>();
 						System.out.println("Reading content for Category "+IsGrandChildIndex_Categories.get(cc)+ " of Child Index Page:"+fourthlevelchildIndexPageTitle);// SALES
 						
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChildIndex_Categories.get(cc)+"' and starts-with(@title,'View children')]")))
+						{
 						WebElement grandchildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Categories.get(cc)+"' and starts-with(@title,'View children')]"));
 									
 						String childCategoryTitle=grandchildCategory.getText(); 
@@ -4328,7 +4695,10 @@ public static void applyFilterForDate() throws Throwable{
 				    	
 				    	wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+fourthlevelchildIndexPageTitle+"')]")).click();
 						
-						
+					}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+IsGrandChildIndex_Categories.get(cc));
+}
 						}
 							
 					
@@ -4336,6 +4706,8 @@ public static void applyFilterForDate() throws Throwable{
 					for(int gcip=0;gcip<numberOfContentsToFetch(IsGrandChildIndex_Index_pages);gcip++)
 					{
 						System.out.println("Now fetching content for Grand child Index Page::"+IsGrandChildIndex_Index_pages.get(gcip)+" under Child index page::"+fourthlevelchildIndexPageTitle);
+						if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsGrandChildIndex_Index_pages.get(ici)+"' and starts-with(@title,'View children')]")))
+						{
 						WebElement grandchildIndexPage=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsGrandChildIndex_Index_pages.get(ici)+"' and starts-with(@title,'View children')]"));
 											
 						String fouthlevelgrandChildIndexPageTitle=grandchildIndexPage.getText(); 
@@ -4360,7 +4732,7 @@ public static void applyFilterForDate() throws Throwable{
 									
 									if(!(grandChildIndexPageContentTitle.contains("View children")))
 									{
-										String grandChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gcipc+"]//td[2]//img[2]/following::td[1]//a")).getText();
+										String grandChildindexpageLinkPortletTitle=wcmalrtDriver.findElement(By.xpath("//tr["+gcipc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 										grandChildIndexPageLinkPortlet.add(grandChildindexpageLinkPortletTitle);
 									}
 									
@@ -4378,8 +4750,9 @@ public static void applyFilterForDate() throws Throwable{
 								{
 								 System.out.println("Fetching Grand child index page Link portlets::"+grandChildIndexPageLinkPortlet.get(gclp));
 										 String grandchildContents=grandChildIndexPageLinkPortlet.get(gclp);
-									    	
-										 WebElement grandChildLinks=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandchildContents+"' and not(contains(@title, 'View children'))]"));
+									   if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandchildContents+"' and not(contains(@title, 'View children'))]"))) 	
+									   {
+										   WebElement grandChildLinks=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandchildContents+"' and not(contains(@title, 'View children'))]"));
 										 
 										 grandChildLinks.click();
 										 
@@ -4413,6 +4786,9 @@ public static void applyFilterForDate() throws Throwable{
 									    	   writeWCMHeaderContentFinalToExcel();
 									    	   testcaseNumber++;
 									           closeContent.click();
+								}
+								else
+								{LogFactory.info("Unable to find the xpath for title::"+grandChildIndexPageLinkPortlet.get(gclp));}
 									}
 							 
 								List<String> IsFinalChild_Tables=new ArrayList<String>();
@@ -4421,7 +4797,8 @@ public static void applyFilterForDate() throws Throwable{
 								for(int gchc=0;gchc<grandChildindexPageContent.size();gchc++)
 								{
 									 String grandchildWithContents=grandChildindexPageContent.get(gchc);
-								    
+								    if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandchildWithContents+"' and (contains(@title, 'View children'))]")))
+								    {
 									 WebElement finalChild=wcmalrtDriver.findElement(By.xpath("//a[.='"+grandchildWithContents+"' and (contains(@title, 'View children'))]"));
 									 
 									 String grandChild=finalChild.getText();
@@ -4434,7 +4811,9 @@ public static void applyFilterForDate() throws Throwable{
 										{
 											IsFinalChild_Categories.add(finalChildType);
 										}
-						
+								    }
+								    else
+								    {LogFactory.info("Unable to find the xpath for title::"+grandchildWithContents);}
 								}
 					
 					//Now fetching table content for grand child index page
@@ -4443,7 +4822,10 @@ public static void applyFilterForDate() throws Throwable{
 								{
 									
 									System.out.println("Fetching Grand Child Table:: "+IsFinalChild_Tables.get(gctc)+" Content");// Child Table
-									WebElement finalGrandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsFinalChild_Tables.get(gctc)+"' and starts-with(@title,'View children')]"));
+									
+									if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsFinalChild_Tables.get(gctc)+"' and starts-with(@title,'View children')]")))
+									{
+										WebElement finalGrandChildTable=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsFinalChild_Tables.get(gctc)+"' and starts-with(@title,'View children')]"));
 												
 									String finalGrandChildtableTitle=finalGrandChildTable.getText(); 
 									
@@ -4467,13 +4849,17 @@ public static void applyFilterForDate() throws Throwable{
 							
 							   	fetchTableRowsContentForGrandChildTable(finalGrandChildtableTitle, grandChildtabledata, "4thLevelIndexPage");
 							   	   
-							  	
+								}
+								else
+								{LogFactory.info("Unable to find the xpath for title::"+IsFinalChild_Tables.get(gctc));}
 								}
 								
 								// fetching grand child categories content
 								for(int gcfcc=0;gcfcc<numberOfContentsToFetch(IsFinalChild_Categories);gcfcc++)
 								{
 									System.out.println("Reading content for Category "+IsFinalChild_Categories.get(gcfcc)+ " of Grand Child Index Page"+fouthlevelgrandChildIndexPageTitle);// SALES
+									if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+IsFinalChild_Categories.get(gcfcc)+"' and starts-with(@title,'View children')]")))
+									{
 									WebElement finalGrandchildCategory=wcmalrtDriver.findElement(By.xpath("//a[.='"+IsFinalChild_Categories.get(gcfcc)+"' and starts-with(@title,'View children')]"));
 												
 									String grandChildCategoryTitle=finalGrandchildCategory.getText(); 
@@ -4490,21 +4876,29 @@ public static void applyFilterForDate() throws Throwable{
 							    	 
 							    	checkForNestedcategories(wcmKeyValue1,"4thLevelGrandChildIndexPageCategories");
 							    	wcmalrtDriver.findElement(By.xpath("//a[contains(.,'"+fourthlevelchildIndexPageTitle+"')]")).click();
-									
+								}
+								else
+								{LogFactory.info("Unable to find the xpath for title::"+IsFinalChild_Categories.get(gcfcc));}
 									
 									}// end of checking for nested category or not
 									
 							
 							 wcmalrtDriver.findElement(By.xpath("//a[.='"+fourthlevelchildIndexPageTitle+"']")).click();
-										
+					}
+					else
+					{LogFactory.info("Unable to find the xpath for title::"+IsGrandChildIndex_Index_pages.get(gcip));}
 							}///END OF GRANDCHILD INDEX PAGES
 									
 									wcmalrtDriver.findElement(By.xpath("//a[.='"+fourthLevelIndexPagetitle+"']")).click();// navigating back to index page Business continuation
-									
+				}
+				else
+				{LogFactory.info("Unable to find the xpath for title::"+IsChild_Index_pages.get(ici));}
 								}//END OF FOR LOOP FOR ALL CHILD INDEX PAGES
 					
 					wcmalrtDriver.findElement(By.xpath("//a[.='"+subDeptsUnderDeptName+"']")).click();
-					
+		}
+		else
+		{ LogFactory.info("Unable to find the xpath for title::"+SAT_FolderIndex_Pages.get(ip));}
 				}  //END OF FOR LOOP FOR ALL INDEX PAGES
 		
 		
