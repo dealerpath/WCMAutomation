@@ -41,6 +41,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import com.deere.Helpers.BaseClass;
+import com.deere.Helpers.LogFactory;
 import com.deere.Helpers.ValidationFactory;
 import com.deere.Helpers.WaitFactory;
 import com.steadystate.css.parser.selectors.SyntheticElementSelectorImpl;
@@ -320,8 +321,9 @@ public class Alert_WCM_POF extends BaseClass{
 					String subDeptImageTitle=alrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]")).getAttribute("title");
 					if(!(subDeptImageTitle.contains("View children")))
 					{
-						String SubDeptChildName=alrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a")).getText();
-						alertsList.add(chceckForTitle(SubDeptChildName));
+						String SubDeptChildName=alrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a")).getAttribute("title");
+						System.out.println("Title is::"+SubDeptChildName);
+						alertsList.add(SubDeptChildName);
 					}
 					if(alertsList.size()==totalCount)
 					{
@@ -334,10 +336,12 @@ public class Alert_WCM_POF extends BaseClass{
 			 for(int i=0;i<numberOfContentsToFetch(alertsList);i++) 
 			 	{
 				 System.out.println("Fetching content for "+wcmsection+" :"+alertsList.get(i));
-				//WebElement alert1=alrtDriver.findElement(By.xpath("//a[contains(.,'"+alertsList.get(i)+"')]"));
-				 WebElement alert1=alrtDriver.findElement(By.xpath("//a[.='"+alertsList.get(i)+"']"));
+				 //WebElement alert1=alrtDriver.findElement(By.xpath("//a[.='"+alertsList.get(i)+"']"));
 				
-			 		alert1.click();
+				 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+alertsList.get(i)+"']")))
+			 		 {
+					 WebElement alert1=alrtDriver.findElement(By.xpath("//a[.='"+alertsList.get(i)+"']"));
+					 alert1.click();
 				 	
 					String wcmTCID=testCaseID+testcaseNumber;
 					wcmKeyvalue.put("WCMSection", wcmsection);
@@ -347,7 +351,12 @@ public class Alert_WCM_POF extends BaseClass{
 			  		writeWCMHeaderContentFinalToExcel();
 			  		testcaseNumber++;
 			    	closeContent.click();
-	 										
+			 		 }		
+				 else
+				 {
+					 LogFactory.info("Unable to find the xpath for title::"+alertsList.get(i));
+					 
+				 }
 			 	}
 			}
 		
@@ -360,7 +369,7 @@ public class Alert_WCM_POF extends BaseClass{
 	 
 			 catch(Exception e)
 			 {
-				 
+				 LogFactory.info("Error while writing contents for "+ wcmsection+" " +e.getMessage().toString());
 				 System.out.println("Error while writing contents for "+ wcmsection+" " +e.getMessage().toString());
 			 }
 	 }
@@ -961,7 +970,7 @@ public static void applyFilterForDate() throws Throwable{
 		    		break;
 		    		}
 		    		
-		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded RichText") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
+		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded Rich Text") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
 		    		{
 		    			
 		    			indexPageContentType="Rich-Text";
@@ -1169,7 +1178,7 @@ public static void applyFilterForDate() throws Throwable{
 			
 			else if(ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
 			{
-				return "Rich-Text";
+				return "Rich-Text/None";
 				}
 			else if(ValidationFactory.isElementPresent(webContentLink) && !(webContentLink.getText().contains("None")))
 			{
