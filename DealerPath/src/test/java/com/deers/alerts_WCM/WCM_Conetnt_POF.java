@@ -224,6 +224,11 @@ public class WCM_Conetnt_POF extends BaseClass{
 	public static WebElement globalMappedCountires;
 	
 	
+	/**
+     * @author      Yogender singh
+     * This method fetch the Alerts and Announcements for the Library mentioned in input sheet
+     * @ throws          Throwable 
+     */
 	
 	public static void readWCMAlertsAnnouncementsContent() throws Throwable
 	{
@@ -284,7 +289,12 @@ public class WCM_Conetnt_POF extends BaseClass{
 	}
 	
 	
-	
+	/**
+     * @author      Yogender singh
+     * This method reads the Alerts and Announcements and writes them into WCM Output excel sheet
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
 	
 	public static void moveInsideWCMContents(String wcmsection) throws Throwable
 	{
@@ -363,7 +373,13 @@ public class WCM_Conetnt_POF extends BaseClass{
 		
 		
 	
-	
+	/**
+     * @author      Yogender singh
+     * This method is to check special characters in the title of the content
+     * and writes them into WCM output excel.
+     * @return         String(Title)
+     * @ throws          Throwable 
+     */
 	
 	private static String chceckForTitle(String text) throws Throwable{
 		
@@ -387,7 +403,12 @@ public class WCM_Conetnt_POF extends BaseClass{
 	}
 
 
-
+	/**
+     * @author      Yogender singh
+     * This method is to navigate to the library provided in the input sheet
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
 
 	public static void navigateToRegion(String library) throws Throwable
 	{
@@ -408,9 +429,17 @@ public class WCM_Conetnt_POF extends BaseClass{
 		e.printStackTrace();
 		System.out.println("Couldn't navigate to alert section "+e.getMessage().toString());
 		}
-		
-	
 	}
+	
+	
+	
+	/**
+     * @author      Yogender singh
+     * This method is to apply filter for Status to the WCM content
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
+	
 	public static void applyFilterForStatus() throws Throwable{
 		try {
 			
@@ -446,6 +475,12 @@ public class WCM_Conetnt_POF extends BaseClass{
 		
 	}
 	
+	/**
+     * @author      Yogender singh
+     * This method is to apply filter for Status and Date together to the WCM content
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
 	
 	
 	public static void applyFilterForStatusAndDate() throws Throwable{
@@ -521,7 +556,12 @@ public class WCM_Conetnt_POF extends BaseClass{
 	}
 	
 
-
+	/**
+     * @author      Yogender singh
+     * This method is to apply filter for Date together to the WCM content
+     * and writes them into WCM output excel.
+     * @ throws          Throwable 
+     */
 public static void applyFilterForDate() throws Throwable{
 		
 		try {
@@ -575,7 +615,12 @@ public static void applyFilterForDate() throws Throwable{
 		
 	}
 	
-	
+/**
+ * @author      Yogender singh
+ * This method is to write the Headers and WCM content row wise into WCM output excel sheet
+ * and writes them into WCM output excel.
+ * @ throws          Throwable 
+ */
 	public static void writeWCMHeaderContentFinalToExcel() throws Throwable
 	{
 		
@@ -584,8 +629,6 @@ public static void applyFilterForDate() throws Throwable{
 			System.out.println("***Writing final content into WCM Excel***");
 			writeWCMHeader(filename, BaseClass.headerList);
 
-			
-			System.out.println("Inside writeWCMHeaderContentFinalToExcel method::"+BaseClass.finalResultforExcel);
 			writeWCMRow(filename, BaseClass.finalResultforExcel);
 
 		}
@@ -597,6 +640,13 @@ public static void applyFilterForDate() throws Throwable{
 	}
 
 	
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to create the WCM output excel sheet as per the Name given in the WCM input sheet 
+	 * and writes them into WCM output excel.
+	 * @ throws          Throwable 
+	 */
 	public static void createWCMExcel() throws Throwable{
 		
 				try {
@@ -674,7 +724,12 @@ public static void applyFilterForDate() throws Throwable{
 		
 	}
 	
-	
+	/**
+	 * @author      Yogender singh
+	 * This method is to read all the wcm content fields and store in Hashmap
+	 * and writes them into WCM output excel.
+	 * @ throws          Throwable 
+	 */
 	
 	public static void writeWCMToExcel(HashMap<String , String> valuesToWrite,String contentToForward ) throws Throwable{
 			
@@ -908,7 +963,7 @@ public static void applyFilterForDate() throws Throwable{
 		    		break;
 		    		}
 		    		
-		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded Rich Text") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
+		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded RichText") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
 		    		{
 		    			
 		    			indexPageContentType="Rich-Text";
@@ -996,7 +1051,6 @@ public static void applyFilterForDate() throws Throwable{
 		    
 		    finalkeyValueWCM.putAll(valuesToWrite);
 		    
-		    System.out.println("Excel Output Map1::"+finalkeyValueWCM);
 		    excelOutput(finalkeyValueWCM);
 		    }
 		
@@ -1030,8 +1084,7 @@ public static void applyFilterForDate() throws Throwable{
 		    valuesToWrite.put("Column 4", column4Text);
 		    valuesToWrite.put("Column 5", column5Text);
 		    
-		    System.out.println("Excel Output Map2::"+finalkeyValueWCM);
-		  	excelOutput(valuesToWrite);
+		    excelOutput(valuesToWrite);
 		    }
 		     
 			
@@ -1046,7 +1099,12 @@ public static void applyFilterForDate() throws Throwable{
 	
 		
 	
-	
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch all Product
+	 * and writes them into WCM output excel.
+	 * @ throws          Throwable 
+	 */
 	
 	private static String fetchProductsList(String products) throws Throwable{
 		// TODO Auto-generated method stub
@@ -1093,7 +1151,13 @@ public static void applyFilterForDate() throws Throwable{
 		return null;
 	}
 
-
+	/**
+	 * @author      Yogender singh
+	 * This method is to check the content type of content
+	 * and return it
+	 * @ throws          Throwable 
+	 *@return		String(content Type, Link, Rich-Text, Document)
+	 */
 	private static String checkForLinkRichTextDocument() throws Throwable{
 		
 		try
@@ -1124,9 +1188,6 @@ public static void applyFilterForDate() throws Throwable{
 				return "Link/"+webContentLinkText.getText();
 				
 			}
-			
-			
-			
 		}
 		
 		catch(Exception e)
@@ -1140,6 +1201,13 @@ public static void applyFilterForDate() throws Throwable{
 	}
 
 
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to add the content into Hasmap List
+	 * and return it
+	 * @ throws          Throwable 
+	 */
 	public static void excelOutput(HashMap<String, String> wcmContentToWrite) throws Throwable {
 		
 		
@@ -1168,6 +1236,13 @@ public static void applyFilterForDate() throws Throwable{
 	
 	
 	
+
+	/**
+	 * @author      Yogender singh
+	 * This method is to add the Headers into the WCM output excel file
+	 * @ throws          Throwable 
+	 * @return			String (Filename)		
+	 */
 	
 	
 	public static String writeWCMHeader(String fileName, List<String> headerList) throws IOException {
@@ -1224,6 +1299,12 @@ public static void applyFilterForDate() throws Throwable{
 	}
 	
 	
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to add the WCM content row wise into the WCm excel sheet
+	 * @ throws          Throwable 
+	 */
 	public static void writeWCMRow(String fileName, List<HashMap<String, String>> rowList)
 			throws IOException, InvalidFormatException, Throwable {
 		
@@ -1240,8 +1321,6 @@ public static void applyFilterForDate() throws Throwable{
 		CellStyle style = wcmbook.createCellStyle();// *
 		//Font font = wcmbook.createFont();// *
 
-		System.out.println("Row list size::"+rowList.size());
-		
 		for (int i = 0; i < rowList.size(); i++) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map = rowList.get(i);
@@ -1316,6 +1395,11 @@ public static void applyFilterForDate() throws Throwable{
 		}
 	}
 
+	/**
+	 * @author      Yogender singh
+	 * This method is to add the Department wise content as per given in the WCM input sheet
+	 * @ throws          Throwable 
+	 */
 
 	public static void fetchDepartmentContents(String departmentName,int totalCount) throws Throwable{
 		
@@ -1389,7 +1473,8 @@ public static void applyFilterForDate() throws Throwable{
 				String subDeptsUnderDeptName=subDepartments.get(sd); //Optimization (Sub Department)
 		    	System.out.println("Fetching content for SubDepartment: "+subDeptsUnderDeptName);//Optimization
 				
-		    	if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+subDeptsUnderDeptName+"' and starts-with(@title,'View children')]"))) {
+		    	if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+subDeptsUnderDeptName+"' and starts-with(@title,'View children')]"))) 
+		    	{
 		    	WebElement subDepartment=wcmalrtDriver.findElement(By.xpath("//a[.='"+subDeptsUnderDeptName+"' and starts-with(@title,'View children')]"));
 			
 				subDepartment.click(); //Optimization or Business Management Clicked
@@ -1425,7 +1510,7 @@ public static void applyFilterForDate() throws Throwable{
 						{
 							String SubDeptNoChildName=wcmalrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]/following::td[1]//a/span")).getText();
 							SubDeptLinkPortlets.add(SubDeptNoChildName);
-							System.out.println("Added link:: "+SubDeptNoChildName+" for SubDepartment::"+subDeptsUnderDeptName);
+							//System.out.println("Added link:: "+SubDeptNoChildName+" for SubDepartment::"+subDeptsUnderDeptName);
 						}
 						
 						if(SubDeptLinkPortlets.size()==totalCount)
@@ -1435,8 +1520,6 @@ public static void applyFilterForDate() throws Throwable{
 						
 						
 					}
-					
-					System.out.println("Total Link portlets before comparison::"+SubDeptLinkPortlets.size());
 					
 					if(SubDeptLinkPortlets.size()>0)
 					{
@@ -1611,7 +1694,7 @@ public static void applyFilterForDate() throws Throwable{
 				wcmalrtDriver.findElement(By.xpath("//a[.='"+departmentName+"']")).click();
 			}
 				else
-				{}
+				{LogFactory.info("Unable to find the xpath for SubDepartment::"+subDeptsUnderDeptName);}
 			}
 		}
 		catch(Exception e)
@@ -1623,6 +1706,13 @@ public static void applyFilterForDate() throws Throwable{
 	} /// END OF fetchDepartmentContents method
 	
 	
+	
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch the content of a SAT-Table
+	 * @ throws          Throwable 
+	 */
 	private static void fetchTableRowsContent(String tableName, HashMap<String, String> tableStructure,String Level) throws Throwable{
 			try
 			{
@@ -1848,7 +1938,12 @@ public static void applyFilterForDate() throws Throwable{
 	}
 
 
-
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch the content of a SAT-Table at Child Level
+	 * @ throws          Throwable 
+	 */
+	
 
 	private static void fetchTableRowsContentForChildTable(String childTablename,HashMap<String, String> childTableStructure,String nextlevel) throws Throwable {
 
@@ -2116,7 +2211,12 @@ public static void applyFilterForDate() throws Throwable{
 	}
 
 
-
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch the content of a SAT-Table at Grand Child Level
+	 * @ throws          Throwable 
+	 */
+	
 
 	private static void fetchTableRowsContentForGrandChildTable(String grandChildTableName,HashMap<String, String> grandChildTableStructure,String nextestLevel ) throws Throwable {
 		HashMap <String,String> grandChildTableContent=new HashMap<String,String>();
@@ -2222,8 +2322,7 @@ public static void applyFilterForDate() throws Throwable{
 			
 			
 			for(int gctcc=0;gctcc<grandChildTableCategories.size();gctcc++)
-			{
-				
+			{	
 				System.out.println("Reading content for Category "+grandChildTableCategories.get(gctcc)+ " of Grand Child Table Index Page:"+grandChildTableName);// SALES
 				
 				if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+grandChildTableCategories.get(gctcc)+"' and starts-with(@title,'View children')]")))
@@ -2278,6 +2377,11 @@ public static void applyFilterForDate() throws Throwable{
 
 
 
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch the content of a SAT-Landing Page
+	 * @ throws          Throwable 
+	 */
 
 	private static void fetchContentsForlandingPages(List<String> sAT_LandingPages, String departmentName,
 			String subDeptsUnderDeptName) throws Throwable{
@@ -2312,8 +2416,6 @@ public static void applyFilterForDate() throws Throwable{
 				totalCount=allLandingPageChildImages.size();
 			}
 
-
-									
 			List<String> IsLanding_Child_Tables=new ArrayList<String>();
 			List<String> IsLanding_Child_Index_pages=new ArrayList<String>();;
 			
@@ -2492,6 +2594,12 @@ public static void applyFilterForDate() throws Throwable{
 
 
 
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch the Structure of a SAT-Table
+	 * @ throws          Throwable 
+	 */
+	
 
 	public static HashMap<String, String> fetchTablesContent(String Tablename) throws Throwable
 	{
@@ -2611,7 +2719,12 @@ public static void applyFilterForDate() throws Throwable{
 		
 	}
 
-
+	/**
+	 * @author      Yogender singh
+	 * This method is to check the content type of an SAT-Index Page
+	 * @ throws          Throwable 
+	 */
+	
 	private static String checkContentType(String indexchildName) {
 		String fetchSiteArea;
 		
@@ -2641,7 +2754,12 @@ public static void applyFilterForDate() throws Throwable{
 	}
 
 	
-	
+
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch all the Child Level content of a SAT-Index page
+	 * @ throws          Throwable 
+	 */
 	public static void fetchContentTillGrandChild(List<String> SAT_Index_Pages,String departmentName, String subDeptsUnderDeptName) throws Throwable
 	{
 		
@@ -2696,6 +2814,27 @@ public static void applyFilterForDate() throws Throwable{
 
 				}
 							
+				
+				if(IndexPageLinkPortlets.size()==0)
+				{
+					System.out.println("Checking Categories for index page::"+indexPageTitle);
+					
+					for(int checkCategory=1;checkCategory<=allChildImages.size();checkCategory++)
+					{
+							WebElement childCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+							String childCategoryTitle=childCategories.getText();
+							
+							String childType=checkContentType(childCategoryTitle);
+							if(childType.contains("SAT-Default Sub-Site Area"))
+							{
+								IsChild_Categories.add(childCategoryTitle);
+							}
+
+
+					}
+					
+				}
+				
 				///writing index page(TCFA_Index_Page) Link Portlets contents
 				HashMap<String, String> IndexPageLinkPortletsMap= new HashMap<String, String>();				
 				for(int cng=0;cng<numberOfContentsToFetch(IndexPageLinkPortlets);cng++)
@@ -2715,7 +2854,7 @@ public static void applyFilterForDate() throws Throwable{
 						String conType =  cType[cType.length-1].trim();
 						System.out.println("Content type for the link is::"+conType);				
 						
-						if((conType.contains("AT-Link") || conType.contains("AT-Index Page")) && ValidationFactory.isElementPresent(webContentElement) && !(webContentLinkText.getText().contains("None")))
+						if(conType.contains("AT-Index Page") && ValidationFactory.isElementPresent(webContentElement) && !(webContentLinkText.getText().contains("None")))
 						{
 						String []indexPageTitleArray=(webContentLinkText).getText().split("/");
 						String childwithGrandChild=indexPageTitleArray[indexPageTitleArray.length-1].trim();
@@ -2760,10 +2899,10 @@ public static void applyFilterForDate() throws Throwable{
 							{
 								IsChild_Index_pages.add(childIndexPageTitle);
 							}
-							else if(childType.contains("SAT-Default Sub-Site Area"))
+							/*else if(childType.contains("SAT-Default Sub-Site Area"))
 							{
 								IsChild_Categories.add(childIndexPageTitle);
-							}
+							}*/
 							
 							System.out.println("This Child of index page "+childIndexPageTitle+" is a "+childType);
 					
@@ -2891,6 +3030,27 @@ public static void applyFilterForDate() throws Throwable{
 							
 						}
 						
+						
+						
+
+						if(childIndexPageLinkPortlet.size()==0)
+						{
+							System.out.println("Checking Categories for Child index page::"+childIndexPageTitle);
+							
+							for(int checkChildIndexPageForCategory=1;checkChildIndexPageForCategory<=allChildImages.size();checkChildIndexPageForCategory++)
+							{
+									WebElement ChildIndexPageCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkChildIndexPageForCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+									String childCategoryTitleCIP=ChildIndexPageCategories.getText();
+									
+									String childType=checkContentType(childCategoryTitleCIP);
+									if(childType.contains("SAT-Default Sub-Site Area"))
+									{
+										IsGrandChildIndex_Categories.add(childCategoryTitleCIP);
+									}
+								}
+							
+						}
+						
 						HashMap<String,String> childIndexPageLinkPortletMap=new HashMap<String,String>();
 						//Now reading link portlets for CHild index page
 					for(int cilp=0;cilp<numberOfContentsToFetch(childIndexPageLinkPortlet);cilp++)
@@ -2898,7 +3058,7 @@ public static void applyFilterForDate() throws Throwable{
 						 System.out.println("fetching child index page link portlet::"+childIndexPageLinkPortlet.get(cilp));
 								 String childIndexLinkPortlet=childIndexPageLinkPortlet.get(cilp);
 								
-								 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))")))
+								 if(ValidationFactory.isElementPresent(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))]")))
 								 {
 								 WebElement childIndexLink=wcmalrtDriver.findElement(By.xpath("//a[.='"+childIndexLinkPortlet+"' and not(contains(@title, 'View children'))]"));
 								 childIndexLink.click();
@@ -2952,10 +3112,10 @@ public static void applyFilterForDate() throws Throwable{
 							{
 								IsGrandChildIndex_Index_pages.add(gccfci);
 							}
-							else if(grandChildType.contains("SAT-Default Sub-Site Area"))
+							/*else if(grandChildType.contains("SAT-Default Sub-Site Area"))
 							{
 								IsGrandChildIndex_Categories.add(gccfci);
-							}
+							}*/
 							
 							System.out.println("This child:"+gccfci +" is a "+grandChildType);
 							}
@@ -3054,6 +3214,9 @@ public static void applyFilterForDate() throws Throwable{
 											
 							List<String> grandChildIndexPageLinkPortlet=new ArrayList<String>();
 							List<String> grandChildindexPageContent=new ArrayList<String>();
+							List<String> IsFinalChild_Tables=new ArrayList<String>();
+							List<String> IsFinalChild_Categories=new ArrayList<String>();
+							
 							
 							if(allChildFoGrandChildIndexPage.size()<totalCount)
 							{
@@ -3077,6 +3240,28 @@ public static void applyFilterForDate() throws Throwable{
 
 										
 									}
+									
+									
+									
+									if(grandChildIndexPageLinkPortlet.size()==0)
+									{
+										System.out.println("Checking Categories for Grand Child index page::"+grandChildIndexPageTitle);
+										
+										for(int checkGCIPForCategory=1;checkGCIPForCategory<=allChildImages.size();checkGCIPForCategory++)
+										{
+												WebElement GCIPCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkGCIPForCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+												String childCategoryTitleGCIP=GCIPCategories.getText();
+												
+												String childType=checkContentType(childCategoryTitleGCIP);
+												if(childType.contains("SAT-Default Sub-Site Area"))
+												{
+													IsFinalChild_Categories.add(childCategoryTitleGCIP);
+												}
+											}
+										
+									}
+									
+									
 							
 							HashMap<String,String> grandChildIndexPageLinkPortletMap=new HashMap<String,String>();
 									////now fetching grand child index page link portlets
@@ -3122,8 +3307,6 @@ public static void applyFilterForDate() throws Throwable{
 										           else
 										        	   {LogFactory.info("Unable to find the xpath for title::"+grandChildIndexPageLinkPortlet.get(gclp));}}
 								 
-									List<String> IsFinalChild_Tables=new ArrayList<String>();
-									List<String> IsFinalChild_Categories=new ArrayList<String>();
 																	
 									for(int gchc=0;gchc<grandChildindexPageContent.size();gchc++)
 									{
@@ -3138,10 +3321,10 @@ public static void applyFilterForDate() throws Throwable{
 											{
 												IsFinalChild_Tables.add(finalChildType);
 											}
-											else if(finalChildType.contains("SAT-Default Sub-Site Area"))
+											/*else if(finalChildType.contains("SAT-Default Sub-Site Area"))
 											{
 												IsFinalChild_Categories.add(finalChildType);
-											}
+											}*/
 									    }
 									    else
 									    {LogFactory.info("Unable to find the xpath for title::"+grandchildWithContents);}
@@ -3241,6 +3424,12 @@ public static void applyFilterForDate() throws Throwable{
 			
 	}   //////END of fetchCOntentTillGrandChild method
 	
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to check if the Category is a nested Category or not for a SAT-Index page
+	 * @ throws          Throwable 
+	 */
 	
 	private static void checkNestedCategoriesForIndexPage(HashMap<String, String> wcmKeyValuePair) throws Throwable{
 
@@ -3384,6 +3573,11 @@ public static void applyFilterForDate() throws Throwable{
 
 
 
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch all the Child Level content of a SAT- Child Index page
+	 * @ throws          Throwable 
+	 */
 
 	private static void fetchContentForChildIndexPage(HashMap<String, String> tableChildIsChildIndexPage,String Level) throws Throwable{
 		try
@@ -3418,6 +3612,26 @@ public static void applyFilterForDate() throws Throwable{
 		
 		
 		}
+		
+		
+		if(childIndexPageLinkPortlet.size()==0)
+		{
+			System.out.println("Checking Categories for Grand Child index page::"+childIndexPageLinkPortlet);
+			
+			for(int checkCIPForCategory=1;checkCIPForCategory<=allChildForChildIndexPage.size();checkCIPForCategory++)
+			{
+					WebElement GCIPCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkCIPForCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+					String childCategoryTitleGCIP=GCIPCategories.getText();
+					
+					String childType=checkContentType(childCategoryTitleGCIP);
+					if(childType.contains("SAT-Default Sub-Site Area"))
+					{
+						IsGrandChildIndex_Categories.add(childCategoryTitleGCIP);
+					}
+				}
+			
+		}
+		
 		
 		//Now reading link portlets for CHild index page
 		for(int cilp=0;cilp<numberOfContentsToFetch(childIndexPageLinkPortlet);cilp++)
@@ -3477,10 +3691,10 @@ public static void applyFilterForDate() throws Throwable{
 		{
 		IsGrandChildIndex_Index_pages.add(gccfci);
 		}
-		else if(grandChildType.contains("SAT-Default Sub-Site Area"))
+		/*else if(grandChildType.contains("SAT-Default Sub-Site Area"))
 		{
 		IsGrandChildIndex_Categories.add(gccfci);
-		}
+		}*/
 		System.out.println("This child:"+gccfci +" is a "+grandChildType);
 		}
 		else
@@ -3571,6 +3785,9 @@ public static void applyFilterForDate() throws Throwable{
 		List<String> grandChildIndexPageLinkPortlet=new ArrayList<String>();
 		List<String> grandChildindexPageContent=new ArrayList<String>();
 		
+		List<String> IsFinalChild_Tables=new ArrayList<String>();
+		List<String> IsFinalChild_Categories=new ArrayList<String>();
+		
 		if(allChildFoGrandChildIndexPage.size()<totalCount)
 		{
 			totalCount=allChildFoGrandChildIndexPage.size();
@@ -3594,6 +3811,28 @@ public static void applyFilterForDate() throws Throwable{
 
 
 		}
+		
+		if(grandChildIndexPageLinkPortlet.size()==0)
+		{
+			System.out.println("Checking Categories for Grand Child index page::"+grandChildIndexPageTitle);
+			
+			for(int checkGCIPForCategory=1;checkGCIPForCategory<=allChildFoGrandChildIndexPage.size();checkGCIPForCategory++)
+			{
+					WebElement GCIPCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkGCIPForCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+					String childCategoryTitleGCIP=GCIPCategories.getText();
+					
+					String childType=checkContentType(childCategoryTitleGCIP);
+					if(childType.contains("SAT-Default Sub-Site Area"))
+					{
+						IsFinalChild_Categories.add(childCategoryTitleGCIP);
+					}
+				}
+			
+		}
+		
+		
+		
+		
 		////now fetching grand child index page link portlets
 		for(int gclp=0;gclp<numberOfContentsToFetch(grandChildIndexPageLinkPortlet);gclp++)
 		{
@@ -3640,8 +3879,7 @@ public static void applyFilterForDate() throws Throwable{
 		{ LogFactory.info("Unable to find the xpath for title::"+grandChildIndexPageLinkPortlet.get(gclp));}
 		}
 		 
-		List<String> IsFinalChild_Tables=new ArrayList<String>();
-		List<String> IsFinalChild_Categories=new ArrayList<String>();
+		
 		for(int gchc=0;gchc<grandChildindexPageContent.size();gchc++)
 		{
 		String grandchildWithContents=grandChildindexPageContent.get(gchc);
@@ -3655,10 +3893,10 @@ public static void applyFilterForDate() throws Throwable{
 		{
 		IsFinalChild_Tables.add(finalChildType);
 		}
-		else if(finalChildType.contains("SAT-Default Sub-Site Area"))
+		/*else if(finalChildType.contains("SAT-Default Sub-Site Area"))
 		{
 		IsFinalChild_Categories.add(finalChildType);
-		}
+		}*/
 		}
 		else
 		{LogFactory.info("Unable to find the xpath for title::"+grandchildWithContents);}
@@ -3738,6 +3976,12 @@ public static void applyFilterForDate() throws Throwable{
 	
 
 
+
+	/**
+	 * @author      Yogender singh
+	 * This method is to check if a Category is Nested or not
+	 * @ throws          Throwable 
+	 */
 
 
 	private static void checkForNestedcategories(HashMap<String,String> wcmKeyValue, String categoryType) throws Throwable{
@@ -3850,6 +4094,13 @@ public static void applyFilterForDate() throws Throwable{
 	}
 
 
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch all the Country Types for a content in required format
+	 * @return			String(Country)
+	 * @ throws          Throwable 
+	 */
 	public static String fetchCountriesList(String country) throws Throwable
 	{
 		
@@ -3901,6 +4152,13 @@ public static void applyFilterForDate() throws Throwable{
 		
 	}
 	
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to +compare the number of contents available and to actually fetch
+	 * @ throws          Throwable 
+	 */
+
 	public static int numberOfContentsToFetch(List<String> listOfContent) throws Throwable{
 		
 		int availablecount = 0;
@@ -3929,7 +4187,12 @@ public static void applyFilterForDate() throws Throwable{
 	}
 	
 	
-	
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch all the content for a SAT-Folder 
+	 * @ throws          Throwable 
+	 */
+
 	private static void fetchContentsForFolders(List<String> sAT_Folders, String departmentName,
 			String subDeptsUnderDeptName) throws Throwable{
 
@@ -4308,6 +4571,12 @@ public static void applyFilterForDate() throws Throwable{
 	}
 
 	
+	
+	/**
+	 * @author      Yogender singh
+	 * This method is to fetch all the content for a SAT-Index page inside a SAAAT-Folder
+	 * @ throws          Throwable 
+	 */
 	public static void fetchContentTillGrandChildIndexPagesForFolder(List<String> SAT_FolderIndex_Pages,String folderName,String departmentName, String subDeptsUnderDeptName) throws Throwable
 	{
 	//3rd lvl folder
@@ -4363,6 +4632,24 @@ public static void applyFilterForDate() throws Throwable{
 				
 			}
 						
+			
+			if(IndexPageLinkPortlets.size()==0)
+			{
+				System.out.println("Checking Categories for Child index page::"+IndexPageLinkPortlets);
+				
+				for(int checkCIPForCategory=1;checkCIPForCategory<=allChildImages.size();checkCIPForCategory++)
+				{
+						WebElement GCIPCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkCIPForCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+						String childCategoryTitleGCIP=GCIPCategories.getText();
+						
+						String childType=checkContentType(childCategoryTitleGCIP);
+						if(childType.contains("SAT-Default Sub-Site Area"))
+						{
+							IsChild_Categories.add(childCategoryTitleGCIP);
+						}
+					}
+				
+			}
 			
 			//System.out.println("Total child under Index page: "+fourthLevelIndexPagetitle+" apart from Link Portlets are::"+ChildHasGrandChild.size());
 		
@@ -4430,10 +4717,10 @@ public static void applyFilterForDate() throws Throwable{
 						{
 							IsChild_Index_pages.add(childIndexPageTitle);
 						}
-						else if(childType.contains("SAT-Default Sub-Site Area"))
+						/*else if(childType.contains("SAT-Default Sub-Site Area"))
 						{
 							IsChild_Categories.add(childIndexPageTitle);
-						}
+						}*/
 						
 						
 						System.out.println("This Child of index page "+childIndexPageTitle+" is a "+childType);
@@ -4556,6 +4843,25 @@ public static void applyFilterForDate() throws Throwable{
 					}
 					
 					
+					if(childIndexPageLinkPortlet.size()==0)
+					{
+						System.out.println("Checking Categories for Grand Child index page::"+childIndexPageLinkPortlet);
+						
+						for(int checkGCIPForCategory=1;checkGCIPForCategory<=allChildImages.size();checkGCIPForCategory++)
+						{
+								WebElement GCIPCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkGCIPForCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+								String childCategoryTitleGCIP=GCIPCategories.getText();
+								
+								String childType=checkContentType(childCategoryTitleGCIP);
+								if(childType.contains("SAT-Default Sub-Site Area"))
+								{
+									IsGrandChildIndex_Categories.add(childCategoryTitleGCIP);
+								}
+							}
+						
+					}
+					
+					
 					//Now reading link portlets for CHild index page
 				for(int cilp=0;cilp<numberOfContentsToFetch(childIndexPageLinkPortlet);cilp++)
 					{
@@ -4618,10 +4924,10 @@ public static void applyFilterForDate() throws Throwable{
 						{
 							IsGrandChildIndex_Index_pages.add(gccfci);
 						}
-						else if(grandChildType.contains("SAT-Default Sub-Site Area"))
+						/*else if(grandChildType.contains("SAT-Default Sub-Site Area"))
 						{
 							IsGrandChildIndex_Categories.add(gccfci);
-						}
+						}*/
 						
 						System.out.println("This child:"+gccfci +" is a "+grandChildType);
 						}
@@ -4663,7 +4969,7 @@ public static void applyFilterForDate() throws Throwable{
 					}
 					else
 					{LogFactory.info("Unable to find the xpath for title::"+IsGrandChild_Tables.get(gct));
-}
+						}
 				   	
 					}
 					
@@ -4698,7 +5004,7 @@ public static void applyFilterForDate() throws Throwable{
 					}
 					else
 					{LogFactory.info("Unable to find the xpath for title::"+IsGrandChildIndex_Categories.get(cc));
-}
+						}
 						}
 							
 					
@@ -4720,6 +5026,10 @@ public static void applyFilterForDate() throws Throwable{
 						List<String> grandChildIndexPageLinkPortlet=new ArrayList<String>();
 						List<String> grandChildindexPageContent=new ArrayList<String>();
 						
+						List<String> IsFinalChild_Tables=new ArrayList<String>();
+						List<String> IsFinalChild_Categories=new ArrayList<String>();
+						
+						
 						if(allChildFoGrandChildIndexPage.size()<totalCount)
 						{
 							totalCount=allChildFoGrandChildIndexPage.size();
@@ -4740,8 +5050,25 @@ public static void applyFilterForDate() throws Throwable{
 									{
 										break;
 									}
-
-
+								}
+								
+								
+								if(grandChildIndexPageLinkPortlet.size()==0)
+								{
+									System.out.println("Checking Categories for Grand Child index page::"+fouthlevelgrandChildIndexPageTitle);
+									
+									for(int checkGCIPForCategory=1;checkGCIPForCategory<=allChildImages.size();checkGCIPForCategory++)
+									{
+											WebElement GCIPCategories=wcmalrtDriver.findElement(By.xpath("//tr["+checkGCIPForCategory+"]//td[2]//img[2]/following::td[1]//a/span"));
+											String childCategoryTitleGCIP=GCIPCategories.getText();
+											
+											String childType=checkContentType(childCategoryTitleGCIP);
+											if(childType.contains("SAT-Default Sub-Site Area"))
+											{
+												IsFinalChild_Categories.add(childCategoryTitleGCIP);
+											}
+										}
+									
 								}
 						
 						
@@ -4791,8 +5118,6 @@ public static void applyFilterForDate() throws Throwable{
 								{LogFactory.info("Unable to find the xpath for title::"+grandChildIndexPageLinkPortlet.get(gclp));}
 									}
 							 
-								List<String> IsFinalChild_Tables=new ArrayList<String>();
-								List<String> IsFinalChild_Categories=new ArrayList<String>();
 																
 								for(int gchc=0;gchc<grandChildindexPageContent.size();gchc++)
 								{
@@ -4913,7 +5238,11 @@ public static void applyFilterForDate() throws Throwable{
 
 	
 	
-	
+	/**
+	 * @author      Yogender singh
+	 * This method is to check if an elements is not present on the UI
+	 * @ throws          Throwable 
+	 */
 	public static boolean isElementNotPresent(WebElement wbelObj) {
 		try {
 			
