@@ -1178,16 +1178,16 @@ public static void applyFilterForDate() throws Throwable{
 				return "Document/"+documentText.getText();
 			}
 			
-			else if(ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
-			{
-				return "Rich-Text/None";
-				}
 			else if(ValidationFactory.isElementPresent(webContentElement) && !(webContentLinkText.getText().contains("None")))
 			{
 				
-				return "Link/"+webContentLinkText.getText();
-				
-			}
+			return "Link/"+webContentLinkText.getText();
+				}
+			
+			else
+			{
+				return "Rich-Text/None";
+				}
 		}
 		
 		catch(Exception e)
