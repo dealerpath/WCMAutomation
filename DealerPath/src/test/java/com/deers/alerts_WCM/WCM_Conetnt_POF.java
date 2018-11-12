@@ -963,7 +963,7 @@ public static void applyFilterForDate() throws Throwable{
 		    		break;
 		    		}
 		    		
-		    		else if(conType.equals("AT-Rich Text") || conType.equals("AT-Embedded RichText") || ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent))
+		    		else if((conType.equals("AT-Rich Text") || conType.equals("AT-Embedded RichText")) || (ValidationFactory.isElementPresent(richTextLabel) && ValidationFactory.isElementPresent(richTextContent)))
 		    		{
 		    			
 		    			indexPageContentType="Rich-Text";
