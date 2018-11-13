@@ -1504,7 +1504,7 @@ public static void applyFilterForDate() throws Throwable{
 					
 					
 					System.out.println("Total children for Subdepartment are:"+allSubDeptChildrenImages.size()+" but content actually to check are:"+totalCount);
-					for(int sdc=1;sdc<=allSubDeptChildrenImages.size();sdc++)
+					for(int sdc=1;sdc<=totalCountAfterComparison;sdc++)
 					{	
 						String subDeptImageTitle=wcmalrtDriver.findElement(By.xpath("//tr["+sdc+"]//td[2]//img[2]")).getAttribute("title");
 						
