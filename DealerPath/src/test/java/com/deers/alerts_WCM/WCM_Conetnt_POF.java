@@ -1496,10 +1496,12 @@ public static void applyFilterForDate() throws Throwable{
 					List<String> SubDeptHasChildren = new ArrayList<String>();
 					List<String> SubDeptLinkPortlets = new ArrayList<String>();
 					
+					int totalCountAfterComparison=totalCount;
 					if(allSubDeptChildrenImages.size()<totalCount)
 					{
-						totalCount=allSubDeptChildrenImages.size();
+						 totalCountAfterComparison=allSubDeptChildrenImages.size();
 					}
+					
 					
 					System.out.println("Total children for Subdepartment are:"+allSubDeptChildrenImages.size()+" but content actually to check are:"+totalCount);
 					for(int sdc=1;sdc<=allSubDeptChildrenImages.size();sdc++)
